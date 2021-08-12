@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@mipmap/ic_launcher"
+            android:id="@+id/cardCIvItemImage" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cardTvItemNameBanner"
+            android:text="Name:"
+            android:textStyle="bold"
+            android:textSize="25sp"
+            android:textColor="@color/black"
+            android:layout_toRightOf="@+id/cardCIvItemImage"
+            android:layout_marginLeft="10dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/cardTvItemName"
+            android:text="Item"
+            android:textStyle="bold"
+            android:textSize="25sp"
+            android:textColor="@color/black"
+            android:layout_toRightOf="@+id/cardTvItemNameBanner"
+            android:layout_marginLeft="10dp"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cardTvExpirationDateBanner"
+            android:text="Expiration: "
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:layout_toRightOf="@id/cardCIvItemImage"
+            android:layout_below="@+id/cardTvItemNameBanner"
+            android:layout_marginLeft="10dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/cardTvExpirationDate"
+            android:text="20 Jun 2021"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:layout_toRightOf="@+id/cardTvExpirationDateBanner"
+            android:layout_below="@+id/cardTvItemName"
+            android:layout_marginLeft="10dp"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@+id/cardCIvItemImage">
+
+            <Button
+                android:id="@+id/btnEditItem"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:text="Edit"
+                android:textAllCaps="false"
+                android:backgroundTint="@color/btn_color"
+                android:layout_marginRight="5dp"/>
+
+            <Button
+                android:id="@+id/btnDeleteItem"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:text="Delete"
+                android:textAllCaps="false"
+                android:backgroundTint="@color/btn_color"
+                android:layout_marginLeft="5dp"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

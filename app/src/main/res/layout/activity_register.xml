@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RegisterActivity"
+    android:background="@drawable/app_bg">
+
+    <ProgressBar
+        android:id="@+id/pbRegAcc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="invisible"/>
+
+    <TextView
+        android:id="@+id/tvRegAccBanner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Register Account"
+        android:textSize="40sp"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias=".05"/>
+
+    <ImageView
+        android:id="@+id/ivRegAccProfileImg"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:layout_constraintTop_toBottomOf="@+id/tvRegAccBanner"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:src="@drawable/add_profile_img_icon"
+        app:layout_constraintVertical_bias="0"/>
+
+    <TextView
+        android:id="@+id/tvAlertPickProfileImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Please pick your profile image"
+        android:textColor="#D32424"
+        android:visibility="invisible"
+        app:layout_constraintTop_toBottomOf="@+id/ivRegAccProfileImg"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/tvUserName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Username:"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-black"
+        app:layout_constraintTop_toBottomOf="@+id/ivRegAccProfileImg"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.05"
+        app:layout_constraintHorizontal_bias=".15"/>
+
+    <EditText
+        android:id="@+id/edtRegUsername"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Type in your username"
+        android:background="@drawable/edittext_bg"
+        android:drawableLeft="@drawable/icon_user"
+        android:padding="10dp"
+        android:inputType="text"
+        app:layout_constraintTop_toBottomOf="@+id/tvUserName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.8"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.01"/>
+
+    <TextView
+        android:id="@+id/tvEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Email:"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-black"
+        app:layout_constraintTop_toBottomOf="@+id/edtRegUsername"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.05"
+        app:layout_constraintHorizontal_bias=".15"/>
+
+    <EditText
+        android:id="@+id/edtRegEmail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="example@email.com"
+        android:background="@drawable/edittext_bg"
+        android:padding="10dp"
+        android:inputType="textEmailAddress"
+        android:drawableLeft="@drawable/icon_email"
+        app:layout_constraintTop_toBottomOf="@+id/tvEmail"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.8"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.01"/>
+
+    <TextView
+        android:id="@+id/tvPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Password:"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-black"
+        app:layout_constraintTop_toBottomOf="@+id/edtRegEmail"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.05"
+        app:layout_constraintHorizontal_bias=".15"/>
+
+    <EditText
+        android:id="@+id/edtRegPassword"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Type your password here"
+        android:background="@drawable/edittext_bg"
+        android:padding="10dp"
+        android:inputType="textPassword"
+        android:drawableLeft="@drawable/icon_lock"
+        app:layout_constraintTop_toBottomOf="@+id/tvPassword"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.8"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.01"/>
+
+    <TextView
+        android:id="@+id/tvConfirmPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Confirm Password:"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-black"
+        app:layout_constraintTop_toBottomOf="@+id/edtRegPassword"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.05"
+        app:layout_constraintHorizontal_bias=".2"/>
+
+    <EditText
+        android:id="@+id/edtRegConfirmPassword"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Type your password again"
+        android:background="@drawable/edittext_bg"
+        android:padding="10dp"
+        android:inputType="textPassword"
+        android:drawableLeft="@drawable/icon_lock"
+        app:layout_constraintTop_toBottomOf="@+id/tvConfirmPassword"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.8"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.01"/>
+
+    <TextView
+        android:id="@+id/tvAlertAccountExisted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Account had already existed. Please try others."
+        android:textColor="#D32424"
+        app:layout_constraintTop_toBottomOf="@+id/edtRegConfirmPassword"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="invisible"/>
+
+    <Button
+        android:id="@+id/btnRegisterAccInfo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Register"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/edtRegConfirmPassword"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.3"
+        app:layout_constraintWidth_percent=".5"
+        android:backgroundTint="#4C4949"/>
+
+    <ProgressBar
+        android:id="@+id/pbRegisterAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:visibility="gone"
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

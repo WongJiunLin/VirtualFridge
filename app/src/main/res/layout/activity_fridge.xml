@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FridgeActivity"
+    android:background="@drawable/app_bg">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/tvFridgeNameBanner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fridge Name"
+            android:fontFamily="sans-serif-black"
+            android:textSize="30sp"
+            android:textAlignment="center"
+            android:padding="10dp"/>
+
+        <TextView
+            android:id="@+id/tvFreezerBanner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Freezer"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:padding="10dp"
+            android:background="@color/btn_color"
+            android:layout_below="@+id/tvFridgeNameBanner"
+            android:layout_margin="10dp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvFreezer"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_margin="10dp"
+            android:layout_below="@+id/tvFreezerBanner"/>
+        <ImageButton
+            android:id="@+id/btnAddFreezer"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/add_icon"
+            android:layout_below="@+id/rvFreezer"
+            android:layout_centerHorizontal="true"/>
+
+        <TextView
+            android:id="@+id/tvShelfBanner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Shelf"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:padding="10dp"
+            android:background="@color/btn_color"
+            android:layout_below="@+id/btnAddFreezer"
+            android:layout_margin="10dp"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvShelf"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_margin="10dp"
+            android:layout_below="@+id/tvShelfBanner"/>
+        <ImageButton
+            android:id="@+id/btnAddShelf"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/add_icon"
+            android:layout_below="@+id/rvShelf"
+            android:layout_centerHorizontal="true"/>
+
+        <TextView
+            android:id="@+id/tvDrawerBanner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Drawer"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:padding="10dp"
+            android:background="@color/btn_color"
+            android:layout_below="@+id/btnAddShelf"
+            android:layout_margin="10dp"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvDrawer"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_margin="10dp"
+            android:layout_below="@+id/tvDrawerBanner"/>
+        <ImageButton
+            android:id="@+id/btnAddDrawer"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/add_icon"
+            android:layout_below="@+id/rvDrawer"
+            android:layout_centerHorizontal="true"/>
+    </RelativeLayout>
+
+</ScrollView>
