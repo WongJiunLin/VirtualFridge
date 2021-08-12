@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,13 +20,15 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import org.w3c.dom.Text;
+
 public class MainActivity extends AppCompatActivity {
 
-    private TextView tvRegisterAccount;
+    private TextView tvRegisterAccount, tvAlertLoginError;
     private EditText edt_singInAccount, edt_signInPassword;
     private Button signInButton;
 
-    private ProgressDialog loadingDialog;
+    private ProgressBar pbLogin;
 
     private FirebaseAuth mAuth;
 
@@ -39,7 +42,8 @@ public class MainActivity extends AppCompatActivity {
         edt_signInPassword = (EditText) findViewById(R.id.edt_signInPassword);
         signInButton = (Button) findViewById(R.id.signInButton);
 
-        loadingDialog = new ProgressDialog(this);
+        pbLogin = (ProgressBar) findViewById(R.id.pbLogin);
+        tvAlertLoginError = (TextView) findViewById(R.id.tvAlertLoginError);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -71,22 +75,22 @@ public class MainActivity extends AppCompatActivity {
             edt_signInPassword.setError("Require field");
             return;
         }
-        loadingDialog.setTitle("Performing user authentication");
-        loadingDialog.setMessage("Please wait. System is validating your account.");
-        loadingDialog.show();
-        loadingDialog.setCanceledOnTouchOutside(true);
 
+        pbLogin.setVisibility(View.VISIBLE);
         mAuth.signInWithEmailAndPassword(signInAccount,signInPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(Task<AuthResult> task) {
                 if (task.isSuccessful()){
+                    tvAlertLoginError.setVisibility(View.INVISIBLE);
+                    pbLogin.setVisibility(View.INVISIBLE);
                     startActivity(new Intent(MainActivity.this, HomeActivity.class));
                     Toast.makeText(MainActivity.this, "Login Successfully", Toast.LENGTH_SHORT).show();
-                    loadingDialog.dismiss();
+
                 }else{
+                    pbLogin.setVisibility(View.INVISIBLE);
+                    tvAlertLoginError.setVisibility(View.VISIBLE);
                     String message = task.getException().getMessage();
                     Toast.makeText(MainActivity.this, "Error occurred: "+message, Toast.LENGTH_SHORT).show();
-                    loadingDialog.dismiss();
                 }
             }
         });

@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -39,7 +40,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private EditText edtRegUsername, edtRegEmail, edtRegPassword, edtRegConfirmPassword;
     private Button btnRegisterAccInfo;
-    private ImageView ivRegAccProfileImg;
+    private ImageButton imgBtnRegAccProfileImg;
     private ProgressBar pbRegAccInfo;
     private TextView tvAlertPickProfileImg, tvAlertAccountExisted;
 
@@ -64,7 +65,7 @@ public class RegisterActivity extends AppCompatActivity {
         edtRegConfirmPassword = (EditText) findViewById(R.id.edtRegConfirmPassword);
 
         btnRegisterAccInfo = (Button) findViewById(R.id.btnRegisterAccInfo);
-        ivRegAccProfileImg = (ImageView) findViewById(R.id.ivRegAccProfileImg);
+        imgBtnRegAccProfileImg = (ImageButton) findViewById(R.id.imgBtnRegAccProfileImg);
 
         tvAlertPickProfileImg = (TextView) findViewById(R.id.tvAlertPickProfileImg);
         tvAlertAccountExisted = (TextView) findViewById(R.id.tvAlertAccountExisted);
@@ -74,7 +75,7 @@ public class RegisterActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         // while user click on the image view redirect user to their local device image gallery
-        ivRegAccProfileImg.setOnClickListener(new View.OnClickListener() {
+        imgBtnRegAccProfileImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openGallery();
@@ -118,9 +119,12 @@ public class RegisterActivity extends AppCompatActivity {
             edtRegConfirmPassword.setError("Confirm password should be same as previous password");
             return;
         }
-        if (ivRegAccProfileImg.getDrawable()==null){
+        if (imgBtnRegAccProfileImg.getDrawable()==null){
             tvAlertPickProfileImg.setVisibility(View.VISIBLE);
             return;
+        }
+        if (imgBtnRegAccProfileImg.getDrawable()!=null){
+            tvAlertPickProfileImg.setVisibility(View.INVISIBLE);
         }
 
         // if valid check account existed or not
@@ -253,7 +257,7 @@ public class RegisterActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode==Gallery_Pick && resultCode==RESULT_OK && data!=null && data.getData()!=null){
             profileImgUri = data.getData();
-            ivRegAccProfileImg.setImageURI(profileImgUri);
+            imgBtnRegAccProfileImg.setImageURI(profileImgUri);
         }else{
             Toast.makeText(RegisterActivity.this, "Error occurred while picking image from local storage.", Toast.LENGTH_SHORT).show();
         }

@@ -71,7 +71,7 @@ public class AddItemActivity extends AppCompatActivity {
 
         pbAddItem = (ProgressBar) findViewById(R.id.pbAddItem);
 
-        itemImageRef = FirebaseStorage.getInstance().getReference().child(currentUserId).child("item images");
+        itemImageRef = FirebaseStorage.getInstance().getReference().child("users").child(currentUserId).child("fridges").child(fridgeKey).child("item images");
         itemRef = FirebaseDatabase.getInstance().getReference().child("users").child(currentUserId)
                 .child("fridges").child(fridgeKey).child(containerType).child("items");
 
