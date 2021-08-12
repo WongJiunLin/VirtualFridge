@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -26,7 +27,7 @@ import java.util.HashMap;
 public class AddFridgeActivity extends AppCompatActivity {
 
     private EditText edtFridgeName;
-    private Button btnCreateFridge;
+    private TextView btnCreateFridge;
 
     private FirebaseAuth mAuth;
     private DatabaseReference fridgeRef;
@@ -40,7 +41,7 @@ public class AddFridgeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_fridge);
 
         edtFridgeName = (EditText) findViewById(R.id.edtFridgeName);
-        btnCreateFridge = (Button) findViewById(R.id.btnCreateFridge);
+        btnCreateFridge = (TextView) findViewById(R.id.btnCreateFridge);
 
         mAuth = FirebaseAuth.getInstance();
         currentUserId = mAuth.getUid();

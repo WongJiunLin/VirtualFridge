@@ -36,7 +36,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvFreezer"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="300dp"
             android:layout_margin="10dp"
             android:layout_below="@+id/tvFreezerBanner"/>
         <ImageButton
@@ -61,7 +61,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvShelf"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="300dp"
             android:layout_margin="10dp"
             android:layout_below="@+id/tvShelfBanner"/>
         <ImageButton
@@ -86,7 +86,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvDrawer"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="300dp"
             android:layout_margin="10dp"
             android:layout_below="@+id/tvDrawerBanner"/>
         <ImageButton

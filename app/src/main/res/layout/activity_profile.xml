@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ProfileActivity"
+    android:background="@drawable/app_bg">
+
+    <TextView
+        android:id="@+id/tvPersonalProfileBanner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Personal Profile"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-black"
+        android:padding="10dp"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/navbar_bg"/>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        app:layout_constraintTop_toBottomOf="@+id/tvPersonalProfileBanner"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias=".05"
+        android:id="@+id/civProfileImg"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/add_profile_img_icon"/>
+
+    <ImageView
+        app:layout_constraintTop_toBottomOf="@+id/tvPersonalProfileBanner"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias=".2"
+        app:layout_constraintHorizontal_bias=".65"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/icon_camera"/>
+
+    <TextView
+        android:id="@+id/tvProfileUsername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="Username"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-black"
+        android:drawableRight="@drawable/icon_edit"
+        app:layout_constraintTop_toBottomOf="@+id/civProfileImg"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0"/>
+
+    <LinearLayout
+        app:layout_constraintTop_toBottomOf="@id/tvProfileUsername"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+                <TextView
+                    android:id="@+id/tvUpdateUsername"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:text="My Email: "
+                    android:textAppearance="?android:textAppearanceLarge"
+                    android:fontFamily="sans-serif-black"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2">
+                <TextView
+                    android:id="@+id/tvProfileEmail"
+                    android:layout_margin="10dp"
+                    android:textSize="20sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="example@email.com"/>
+            </RelativeLayout>
+        </LinearLayout>
+        <TextView
+            android:id="@+id/btnUpdateProfile"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="Update Info"
+            android:textAlignment="center"
+            android:layout_gravity="center"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/button_bg"/>
+
+        <TextView
+            android:id="@+id/btnResetPassword"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="Reset Password"
+            android:textAlignment="center"
+            android:layout_gravity="center"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/button_bg"/>
+        <TextView
+            android:id="@+id/btnLogout"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="Log Out"
+            android:layout_gravity="center"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/button_bg"/>
+
+    </LinearLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/nav_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:menu="@menu/navigation_bar"
+        app:itemRippleColor="@color/icon_color"
+        app:itemIconTint="@color/icon_color"
+        app:itemTextColor="@color/icon_color"
+        android:background="@drawable/navbar_bg"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
