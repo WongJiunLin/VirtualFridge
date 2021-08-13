@@ -6,7 +6,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -18,6 +21,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SimpleExpandableListAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -41,7 +45,7 @@ public class AddItemActivity extends AppCompatActivity {
     private ImageView ivItemImage;
     private Uri imageUri;
     private EditText edtItemName, edtItemCategory;
-    private ImageButton addItemButton, clearItemButton;
+    private ImageButton addItemButton, clearItemButton, imgBtnClosePopOut;
     private ProgressBar pbAddItem;
 
     private StorageReference itemImageRef;
@@ -51,6 +55,10 @@ public class AddItemActivity extends AppCompatActivity {
 
     private Intent intentFromFridgeActivity;
     private String itemName, itemCategory, itemStoredDate, itemExpirationDate;
+    private String fridgeKey, containerType;
+
+    private TextView tvCheckExpiry;
+    private Dialog expiryDialog;
 
     private static int Gallery_Pick = 1;
 
@@ -63,8 +71,8 @@ public class AddItemActivity extends AppCompatActivity {
         expirationDateButton.setText(getTodayDate());
 
         intentFromFridgeActivity = getIntent();
-        String fridgeKey = intentFromFridgeActivity.getStringExtra("fridgeKey");
-        String containerType = intentFromFridgeActivity.getStringExtra("containerType");
+        fridgeKey = intentFromFridgeActivity.getStringExtra("fridgeKey");
+        containerType = intentFromFridgeActivity.getStringExtra("containerType");
 
         mAuth = FirebaseAuth.getInstance();
         currentUserId = mAuth.getUid();
@@ -102,6 +110,28 @@ public class AddItemActivity extends AppCompatActivity {
                 returnToFridgeActivity();
             }
         });
+
+        expiryDialog = new Dialog(this);
+        tvCheckExpiry = (TextView) findViewById(R.id.tvCheckExpiry);
+        tvCheckExpiry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPopOut(v);
+            }
+        });
+    }
+
+    private void showPopOut(View v) {
+        expiryDialog.setContentView(R.layout.expirationdatepopup);
+        imgBtnClosePopOut = expiryDialog.findViewById(R.id.imgBtnClosePopOut);
+        imgBtnClosePopOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                expiryDialog.dismiss();
+            }
+        });
+        expiryDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        expiryDialog.show();
     }
 
     private void returnToFridgeActivity() {

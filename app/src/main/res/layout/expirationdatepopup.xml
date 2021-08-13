@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="300dp"
+    android:layout_height="475dp"
+    android:background="@color/dark_gray"
+    android:padding="5dp"
+    android:layout_gravity="center">
+
+    <ImageButton
+        android:id="@+id/imgBtnClosePopOut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/clear_button"
+        android:layout_gravity="end"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/civPopOutImg"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:src="@drawable/apple"/>
+        <TextView
+            android:id="@+id/itemCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pome Fruit"
+            android:textStyle="bold"
+            android:textSize="25sp"
+            android:fontFamily="sans-serif-black"
+            android:layout_gravity="center"
+            android:textColor="@color/white"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center">
+        <TextView
+            android:id="@+id/tvItemExpiryDetailsText"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="'Pome fruit is recommended to store in fridge for maximum 2 months.'"
+            android:textSize="15sp"
+            android:textColor="@color/white"/>
+        <TextView
+            android:id="@+id/tvSaidBySystem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="---System said"
+            android:layout_gravity="end"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:layout_margin="10dp"/>
+    </LinearLayout>
+
+
+
+</LinearLayout>
