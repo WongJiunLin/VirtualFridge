@@ -22,11 +22,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <ImageView
-        android:id="@+id/ivItemImage"
+    <ImageButton
+        android:id="@+id/imgBtnItemImage"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:src="@drawable/ic_baseline_add_photo_alternate_24"
+        android:background="@drawable/ic_baseline_add_photo_alternate_24"
         app:layout_constraintTop_toBottomOf="@+id/tvAddItemBanner"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -49,7 +49,7 @@
         app:counterEnabled="true"
         app:counterMaxLength="30"
         app:endIconMode="clear_text"
-        app:layout_constraintTop_toBottomOf="@+id/ivItemImage"
+        app:layout_constraintTop_toBottomOf="@+id/imgBtnItemImage"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

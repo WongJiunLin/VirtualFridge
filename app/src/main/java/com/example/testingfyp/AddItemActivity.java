@@ -49,13 +49,12 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
 
     private DatePickerDialog datePickerDialog;
 
-    private ImageView ivItemImage;
     private Uri imageUri;
 
     private TextInputLayout txtIptLayoutItemType, txtIptLayoutItemCategory,txtIptLayoutItemExpirationDate;
     private AutoCompleteTextView dropdownItemType, dropdownItemCategory,tvItemExpirationDate;
     private TextInputEditText edtItemName;
-    private ImageButton addItemButton, clearItemButton, imgBtnClosePopOut;
+    private ImageButton addItemButton, clearItemButton, imgBtnClosePopOut, imgBtnItemImage;
     private ProgressBar pbAddItem;
 
     private StorageReference itemImageRef;
@@ -76,9 +75,6 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
-        //initDatePicker();
-        //expirationDateButton = (Button) findViewById(R.id.datePickerButton);
-        //expirationDateButton.setText(getTodayDate());
 
         intentFromFridgeActivity = getIntent();
         fridgeKey = intentFromFridgeActivity.getStringExtra("fridgeKey");
@@ -113,7 +109,8 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
         // assign all necessary item category choices into adapter,
         // set the autocomplete textview with respective adapter
         txtIptLayoutItemCategory = (TextInputLayout) findViewById(R.id.txtIptLayoutItemCategory);
-        String[] itemCategories = new String[]{
+        // String array that consists of all fruit categories
+        String[] itemFruitCategories = new String[]{
                 "Avocado",
                 "Berries",
                 "Citrus",
@@ -123,19 +120,82 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
                 "Tomato",
                 "Tropical Fruit"
         };
-        ArrayAdapter<String> itemCategoryAdapter = new ArrayAdapter<>(
+        // array adapter created by using fruit categories array list
+        ArrayAdapter<String> itemFruitCategoryAdapter = new ArrayAdapter<>(
                 AddItemActivity.this,
                 R.layout.dropdown_item,
-                itemCategories
+                itemFruitCategories
         );
+
+        // String array that consists of all vegetable categories
+        String[] itemVegeCategories = new String[]{
+                "Allium",
+                "Cruciferous Vegetable",
+                "Leafy Green",
+                "Marrow",
+                "Root Vegetable"
+        };
+        // array adapter that created by using vegetable categories array list
+        ArrayAdapter<String> itemVegeCategoryAdapter = new ArrayAdapter<>(
+                AddItemActivity.this,
+                R.layout.dropdown_item,
+                itemVegeCategories
+        );
+
+        // String array that consists of all fresh meat categories
+        String[] itemFreshMeatCategories = new String[]{
+                "Chilled Meat",
+                "Frozen Meat"
+        };
+        // array adapter that created by using fresh meat categories array list
+        ArrayAdapter<String> itemFreshMeatCategoryAdapter = new ArrayAdapter<>(
+                AddItemActivity.this,
+                R.layout.dropdown_item,
+                itemFreshMeatCategories
+        );
+
+        // String array that consists of all seafood categories
+        String[] itemSeafoodCategories = new String[]{
+                "Fresh Fish",
+                "Shell Fish"
+        };
+        // array adapter that created by using fresh meat categories array list
+        ArrayAdapter<String> itemSeafoodCategoryAdapter = new ArrayAdapter<>(
+                AddItemActivity.this,
+                R.layout.dropdown_item,
+                itemSeafoodCategories
+        );
+
         dropdownItemCategory = (AutoCompleteTextView) findViewById(R.id.dropdownItemCategory);
-        dropdownItemCategory.setAdapter(itemCategoryAdapter);
+        //dropdownItemCategory.setAdapter(itemVegeCategoryAdapter);
+        dropdownItemType.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (dropdownItemType.getText().toString().equals("Vegetable")){
+                    dropdownItemCategory.setAdapter(itemVegeCategoryAdapter);
+                }
+                else if (dropdownItemType.getText().toString().equals("Fruit")){
+                    dropdownItemCategory.setAdapter(itemFruitCategoryAdapter);
+                }
+                else if (dropdownItemType.getText().toString().equals("Fresh Meat")){
+                    dropdownItemCategory.setAdapter(itemFreshMeatCategoryAdapter);
+                }
+                else if (dropdownItemType.getText().toString().equals("Seafood")){
+                    dropdownItemCategory.setAdapter(itemSeafoodCategoryAdapter);
+                }else{
+                    dropdownItemType.setError("Select your item type first");
+                }
+            }
+        });
+
+
+
 
         edtItemName = (TextInputEditText) findViewById(R.id.edtItemName);
 
-        ivItemImage = (ImageView) findViewById(R.id.ivItemImage);
+        imgBtnItemImage = (ImageButton) findViewById(R.id.imgBtnItemImage);
         // when click the adding image image view, redirect user to their device local storage to pick image
-        ivItemImage.setOnClickListener(new View.OnClickListener() {
+        imgBtnItemImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openGallery();
@@ -221,6 +281,7 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
             tvItemExpirationDate.setError("Please pick item expiration date");
             return;
         }
+
         insertImageToFirebaseStorage();
 
     }
@@ -308,7 +369,7 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode==Gallery_Pick && resultCode==RESULT_OK && data!=null && data.getData()!=null){
             imageUri = data.getData();
-            ivItemImage.setImageURI(imageUri);
+            imgBtnItemImage.setImageURI(imageUri);
         }else{
             Toast.makeText(AddItemActivity.this, "Error occurred while picking image from local storage.", Toast.LENGTH_SHORT).show();
         }
