@@ -141,6 +141,18 @@
                     android:onClick="openDatePicker"/>
             </RelativeLayout>
         </LinearLayout>
+        <TextView
+            android:id="@+id/tvCheckExpiry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Click here if not sure the item expiration date"
+            android:drawableRight="@drawable/icon_search"
+            android:drawablePadding="13dp"
+            android:textSize="15sp"
+            android:layout_margin="10dp"
+            android:fontFamily="sans-serif-black"
+            android:layout_gravity="center"/>
+
     </LinearLayout>
 
     <ImageButton
