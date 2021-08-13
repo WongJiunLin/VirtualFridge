@@ -7,131 +7,166 @@
     tools:context=".AddItemActivity"
     android:background="@drawable/app_bg">
 
-    <ImageView
-        android:id="@+id/ivItemImage"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/tvAddItemBanner"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_baseline_add_photo_alternate_24"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:text="Add Item"
+        android:textSize="30sp"
+        android:textColor="@color/white"
+        android:padding="10dp"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-black"
+        android:background="@drawable/navbar_bg"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias=".2" />
-
-    <TextView
-        android:id="@+id/tvItemName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Item Name:"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:padding="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias=".1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivItemImage"
-        app:layout_constraintVertical_bias="0.1" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-    <EditText
-        android:id="@+id/edtItemName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Type item name"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <LinearLayout
+        app:layout_constraintTop_toBottomOf="@+id/tvAddItemBanner"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tvItemName"
-        app:layout_constraintTop_toBottomOf="@+id/ivItemImage"
-        app:layout_constraintVertical_bias="0.1"
-        app:layout_constraintHorizontal_bias="0.2"
-        android:background="@drawable/edittext_bg"
-        android:padding="10dp"
-        app:layout_constraintWidth_percent=".6"/>
-
-    <TextView
-        android:id="@+id/tvCategory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Category:"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:padding="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias=".1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvItemName"
-        app:layout_constraintVertical_bias="0.1" />
-
-    <EditText
-        android:id="@+id/edtItemCategory"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Item Category"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tvCategory"
-        app:layout_constraintTop_toBottomOf="@+id/edtItemName"
-        app:layout_constraintVertical_bias="0.1"
-        app:layout_constraintHorizontal_bias="0.6"
-        android:background="@drawable/edittext_bg"
-        android:padding="10dp"
-        app:layout_constraintWidth_percent=".6"/>
-
-    <TextView
-        android:id="@+id/tvExpirationDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Expiration Date:"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:padding="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias=".1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvCategory"
-        app:layout_constraintVertical_bias="0.1" />
-
-    <Button
-        android:id="@+id/datePickerButton"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:text="JAN 01 2020"
-        android:textColor="@color/black"
-        style="?android:spinnerStyle"
-        app:layout_constraintTop_toBottomOf="@+id/edtItemCategory"
-        app:layout_constraintStart_toEndOf="@id/tvExpirationDate"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintVertical_bias=".1"
-        android:onClick="openDatePicker"/>
-
-    <ImageButton
-        android:id="@+id/addItemButton"
-        android:layout_width="wrap_content"
+        android:id="@+id/llAddItem"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/check_button"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias=".9"
-        app:layout_constraintHorizontal_bias="0.9"/>
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/ivItemImage"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/ic_baseline_add_photo_alternate_24"
+            android:layout_gravity="center"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+                <TextView
+                    android:id="@+id/tvItemName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:text="Item Name:"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:padding="10dp"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2">
+                <EditText
+                    android:id="@+id/edtItemName"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:hint="Type item name"
+                    android:textSize="20sp"
+                    android:background="@drawable/edittext_bg"
+                    android:padding="10dp" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+                <TextView
+                    android:id="@+id/tvCategory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:text="Category:"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:padding="10dp"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2">
+                <EditText
+                    android:id="@+id/edtItemCategory"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:hint="Item Category"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="17dp"
+                    android:textSize="20sp"
+                    android:background="@drawable/edittext_bg"
+                    android:padding="10dp"/>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+                <TextView
+                    android:id="@+id/tvExpirationDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Expiration Date:"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:padding="10dp"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2">
+                <Button
+                    android:id="@+id/datePickerButton"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:text="JAN 01 2020"
+                    android:textColor="@color/black"
+                    android:layout_marginLeft="20dp"
+                    style="?android:spinnerStyle"
+                    android:onClick="openDatePicker"/>
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
 
     <ImageButton
         android:id="@+id/clearItemButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
         android:background="@drawable/clear_button"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/llAddItem"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias=".9"
-        app:layout_constraintHorizontal_bias="0.1" />
+        app:layout_constraintHorizontal_bias="0"/>
+
+    <ImageButton
+        android:id="@+id/addItemButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="80dp"
+        android:background="@drawable/check_button"
+        app:layout_constraintTop_toBottomOf="@+id/llAddItem"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias=".9"/>
+
 
     <ProgressBar
         android:id="@+id/pbAddItem"
