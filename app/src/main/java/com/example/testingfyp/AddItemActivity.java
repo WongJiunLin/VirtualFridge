@@ -3,6 +3,7 @@ package com.example.testingfyp;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -14,6 +15,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -21,11 +25,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SimpleExpandableListAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -33,18 +40,21 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 
-public class AddItemActivity extends AppCompatActivity {
+public class AddItemActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     private DatePickerDialog datePickerDialog;
-    private Button expirationDateButton;
 
     private ImageView ivItemImage;
     private Uri imageUri;
-    private EditText edtItemName, edtItemCategory;
+
+    private TextInputLayout txtIptLayoutItemType, txtIptLayoutItemCategory,txtIptLayoutItemExpirationDate;
+    private AutoCompleteTextView dropdownItemType, dropdownItemCategory,tvItemExpirationDate;
+    private TextInputEditText edtItemName;
     private ImageButton addItemButton, clearItemButton, imgBtnClosePopOut;
     private ProgressBar pbAddItem;
 
@@ -54,7 +64,7 @@ public class AddItemActivity extends AppCompatActivity {
     private String currentUserId, saveCurrentDate, saveCurrentTime, imgRandomName, downloadUri;
 
     private Intent intentFromFridgeActivity;
-    private String itemName, itemCategory, itemStoredDate, itemExpirationDate;
+    private String itemName, itemType, itemCategory, itemStoredDate, itemExpirationDate;
     private String fridgeKey, containerType;
 
     private TextView tvCheckExpiry;
@@ -66,9 +76,9 @@ public class AddItemActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
-        initDatePicker();
-        expirationDateButton = (Button) findViewById(R.id.datePickerButton);
-        expirationDateButton.setText(getTodayDate());
+        //initDatePicker();
+        //expirationDateButton = (Button) findViewById(R.id.datePickerButton);
+        //expirationDateButton.setText(getTodayDate());
 
         intentFromFridgeActivity = getIntent();
         fridgeKey = intentFromFridgeActivity.getStringExtra("fridgeKey");
@@ -83,8 +93,45 @@ public class AddItemActivity extends AppCompatActivity {
         itemRef = FirebaseDatabase.getInstance().getReference().child("users").child(currentUserId)
                 .child("fridges").child(fridgeKey).child(containerType).child("items");
 
-        edtItemName = (EditText) findViewById(R.id.edtItemName);
-        edtItemCategory = (EditText) findViewById(R.id.edtItemCategory);
+        // assign all the necessary item type choices into adapter,
+        // set the autocomplete textview with respective adapter
+        txtIptLayoutItemType = (TextInputLayout) findViewById(R.id.txtIptLayoutItemType);
+        String[] itemTypes = new String[]{
+                "Vegetable",
+                "Fruit",
+                "Fresh Meat",
+                "Seafood"
+        };
+        ArrayAdapter<String> itemTypeAdapter = new ArrayAdapter<>(
+                AddItemActivity.this,
+                R.layout.dropdown_item,
+                itemTypes
+        );
+        dropdownItemType = (AutoCompleteTextView) findViewById(R.id.dropdownItemType);
+        dropdownItemType.setAdapter(itemTypeAdapter);
+
+        // assign all necessary item category choices into adapter,
+        // set the autocomplete textview with respective adapter
+        txtIptLayoutItemCategory = (TextInputLayout) findViewById(R.id.txtIptLayoutItemCategory);
+        String[] itemCategories = new String[]{
+                "Avocado",
+                "Berries",
+                "Citrus",
+                "Melon",
+                "Pome Fruit",
+                "Stone Fruit",
+                "Tomato",
+                "Tropical Fruit"
+        };
+        ArrayAdapter<String> itemCategoryAdapter = new ArrayAdapter<>(
+                AddItemActivity.this,
+                R.layout.dropdown_item,
+                itemCategories
+        );
+        dropdownItemCategory = (AutoCompleteTextView) findViewById(R.id.dropdownItemCategory);
+        dropdownItemCategory.setAdapter(itemCategoryAdapter);
+
+        edtItemName = (TextInputEditText) findViewById(R.id.edtItemName);
 
         ivItemImage = (ImageView) findViewById(R.id.ivItemImage);
         // when click the adding image image view, redirect user to their device local storage to pick image
@@ -119,6 +166,19 @@ public class AddItemActivity extends AppCompatActivity {
                 showPopOut(v);
             }
         });
+
+        // while click on the txt input layout for expiration date prompt user to date picker,
+        // to pick expiration date for the item
+        txtIptLayoutItemExpirationDate = (TextInputLayout) findViewById(R.id.txtIptLayoutItemExpirationDate);
+        tvItemExpirationDate = (AutoCompleteTextView) findViewById(R.id.tvItemExpirationDate);
+        tvItemExpirationDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment datePicker = new DatePickerFragment();
+                datePicker.show(getSupportFragmentManager(),"date picker");
+            }
+        });
+
     }
 
     private void showPopOut(View v) {
@@ -141,15 +201,24 @@ public class AddItemActivity extends AppCompatActivity {
     private void validateItemInfo() {
 
         itemName = edtItemName.getText().toString();
-        itemCategory = edtItemCategory.getText().toString();
-        itemExpirationDate = expirationDateButton.getText().toString();
+        itemType = dropdownItemType.getText().toString();
+        itemCategory = dropdownItemCategory.getText().toString();
+        itemExpirationDate = tvItemExpirationDate.getText().toString();
 
         if (TextUtils.isEmpty(itemName)){
             edtItemName.setError("Required field");
             return;
         }
+        if (TextUtils.isEmpty(itemType)){
+            dropdownItemType.setError("Please choose item type");
+            return;
+        }
         if (TextUtils.isEmpty(itemCategory)){
-            edtItemCategory.setError("Required field");
+            dropdownItemCategory.setError("Please choose item category");
+            return;
+        }
+        if (TextUtils.isEmpty(itemExpirationDate)){
+            tvItemExpirationDate.setError("Please pick item expiration date");
             return;
         }
         insertImageToFirebaseStorage();
@@ -206,6 +275,7 @@ public class AddItemActivity extends AppCompatActivity {
         //create map to stored the current item info
         HashMap itemMap = new HashMap();
         itemMap.put("itemName",itemName);
+        itemMap.put("itemType", itemType);
         itemMap.put("itemCategory",itemCategory);
         itemMap.put("itemStoredDate",itemStoredDate);
         itemMap.put("itemExpirationDate", itemExpirationDate);
@@ -244,75 +314,14 @@ public class AddItemActivity extends AppCompatActivity {
         }
     }
 
-    private String getTodayDate() {
-        Calendar cal = Calendar.getInstance();
-        int year =  cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH);
-        month = month +1;
-        int day = cal.get(Calendar.DAY_OF_MONTH);
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-        return makeDateString(day, month, year);
-    }
-
-    private void initDatePicker() {
-
-        DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener(){
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                month = month + 1;
-                String date = makeDateString(day, month, year);
-                expirationDateButton.setText(date);
-            }
-        };
-
-        Calendar cal = Calendar.getInstance();
-        int year =  cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH);
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-
-        int style = AlertDialog.THEME_HOLO_LIGHT;
-
-        datePickerDialog = new DatePickerDialog(this, style, dateSetListener, year, month, day);
-
-    }
-
-    private String makeDateString(int day, int month, int year) {
-        return day + " " + getMonthFormat(month) + " " + year;
-    }
-
-    private String getMonthFormat(int month) {
-        if (month==1)
-            return "JAN";
-        if (month==2)
-            return "FEB";
-        if (month==3)
-            return "MAR";
-        if (month==4)
-            return "APR";
-        if (month==5)
-            return "MAY";
-        if (month==6)
-            return "JUN";
-        if (month==7)
-            return "JUL";
-        if (month==8)
-            return "AUG";
-        if (month==9)
-            return "SEP";
-        if (month==10)
-            return "OCT";
-        if (month==11)
-            return "NOV";
-        if (month==12)
-            return "DEC";
-
-        //default
-        return "JAN";
-    }
-
-    public void openDatePicker(View view) {
-
-        datePickerDialog.show();
-
+        String currentDate = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
+        tvItemExpirationDate.setText(currentDate);
     }
 }

@@ -22,161 +22,159 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <LinearLayout
+    <ImageView
+        android:id="@+id/ivItemImage"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/ic_baseline_add_photo_alternate_24"
         app:layout_constraintTop_toBottomOf="@+id/tvAddItemBanner"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias=".1"
-        android:id="@+id/llAddItem"
+        app:layout_constraintVertical_bias=".05"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:id="@+id/txtIptLayoutItemName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:hint="Enter Item Name"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        app:boxCornerRadiusTopStart="16dp"
+        app:boxCornerRadiusTopEnd="16dp"
+        app:boxCornerRadiusBottomStart="16dp"
+        app:boxCornerRadiusBottomEnd="16dp"
+        app:helperText="You can type item name here"
+        app:counterEnabled="true"
+        app:counterMaxLength="30"
+        app:endIconMode="clear_text"
+        app:layout_constraintTop_toBottomOf="@+id/ivItemImage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias=".05">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtItemName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
-        <ImageView
-            android:id="@+id/ivItemImage"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:src="@drawable/ic_baseline_add_photo_alternate_24"
-            android:layout_gravity="center"/>
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/txtIptLayoutItemType"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:hint="Choose Item Type"
+        app:boxCornerRadiusTopStart="16dp"
+        app:boxCornerRadiusTopEnd="16dp"
+        app:boxCornerRadiusBottomStart="16dp"
+        app:boxCornerRadiusBottomEnd="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/txtIptLayoutItemName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.05">
+        <AutoCompleteTextView
+            android:id="@+id/dropdownItemType"
+            android:inputType="none"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-                <TextView
-                    android:id="@+id/tvItemName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:text="Item Name:"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:padding="10dp"/>
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="2">
-                <EditText
-                    android:id="@+id/edtItemName"
-                    android:layout_width="250dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:hint="Type item name"
-                    android:textSize="20sp"
-                    android:background="@drawable/edittext_bg"
-                    android:padding="10dp" />
-            </RelativeLayout>
-        </LinearLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/txtIptLayoutItemCategory"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:hint="Choose Item Category"
+        app:boxCornerRadiusTopStart="16dp"
+        app:boxCornerRadiusTopEnd="16dp"
+        app:boxCornerRadiusBottomStart="16dp"
+        app:boxCornerRadiusBottomEnd="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/txtIptLayoutItemType"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.05">
+        <AutoCompleteTextView
+            android:id="@+id/dropdownItemCategory"
+            android:inputType="none"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-                <TextView
-                    android:id="@+id/tvCategory"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:text="Category:"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:padding="10dp"/>
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="2">
-                <EditText
-                    android:id="@+id/edtItemCategory"
-                    android:layout_width="250dp"
-                    android:layout_height="wrap_content"
-                    android:hint="Item Category"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="17dp"
-                    android:textSize="20sp"
-                    android:background="@drawable/edittext_bg"
-                    android:padding="10dp"/>
-            </RelativeLayout>
-        </LinearLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/txtIptLayoutItemExpirationDate"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:hint="Click to Pick Item Expiration Date"
+        app:endIconMode="none"
+        app:boxCornerRadiusTopStart="16dp"
+        app:boxCornerRadiusTopEnd="16dp"
+        app:boxCornerRadiusBottomStart="16dp"
+        app:boxCornerRadiusBottomEnd="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/txtIptLayoutItemCategory"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.05">
+        <AutoCompleteTextView
+            android:inputType="none"
+            android:id="@+id/tvItemExpirationDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-                <TextView
-                    android:id="@+id/tvExpirationDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Expiration Date:"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:padding="10dp"/>
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="2">
-                <Button
-                    android:id="@+id/datePickerButton"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:text="JAN 01 2020"
-                    android:textColor="@color/black"
-                    android:layout_marginLeft="20dp"
-                    style="?android:spinnerStyle"
-                    android:onClick="openDatePicker"/>
-            </RelativeLayout>
-        </LinearLayout>
-        <TextView
-            android:id="@+id/tvCheckExpiry"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Click here if not sure the item expiration date"
-            android:drawableRight="@drawable/icon_search"
-            android:drawablePadding="13dp"
-            android:textSize="15sp"
-            android:layout_margin="10dp"
-            android:fontFamily="sans-serif-black"
-            android:layout_gravity="center"/>
-
-    </LinearLayout>
+    <TextView
+        android:id="@+id/tvCheckExpiry"
+        android:layout_width="210dp"
+        android:layout_height="wrap_content"
+        android:text="Click here if not sure the item expiration date"
+        android:drawableRight="@drawable/icon_search"
+        android:drawablePadding="13dp"
+        android:textSize="15sp"
+        android:layout_margin="10dp"
+        android:fontFamily="sans-serif-black"
+        android:layout_gravity="center"
+        app:layout_constraintTop_toBottomOf="@+id/txtIptLayoutItemExpirationDate"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0"
+        app:layout_constraintHorizontal_bias="0.2"/>
 
     <ImageButton
         android:id="@+id/clearItemButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="40dp"
-        android:background="@drawable/clear_button"
-        app:layout_constraintTop_toBottomOf="@+id/llAddItem"
+        android:background="@drawable/icon_error"
+        app:layout_constraintTop_toBottomOf="@+id/tvAddItemBanner"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0"/>
+        app:layout_constraintVertical_bias="0.01"
+        app:layout_constraintHorizontal_bias="0.95"/>
 
     <ImageButton
         android:id="@+id/addItemButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="80dp"
-        android:background="@drawable/check_button"
-        app:layout_constraintTop_toBottomOf="@+id/llAddItem"
+        android:background="@drawable/icon_check"
+        app:layout_constraintTop_toBottomOf="@+id/txtIptLayoutItemExpirationDate"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.1"
         app:layout_constraintHorizontal_bias=".9"/>
 
 
