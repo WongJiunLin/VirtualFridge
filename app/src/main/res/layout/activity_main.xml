@@ -21,7 +21,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="150dp"/>
 
-    <TextView
+    <!--<TextView
         android:id="@+id/tvAccount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -84,7 +84,57 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_percent="0.8"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0"/>
+        app:layout_constraintVertical_bias="0"/>-->
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/txtIptLayoutSignInAcc"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:hint="Account"
+        app:boxCornerRadiusTopStart="25dp"
+        app:boxCornerRadiusTopEnd="25dp"
+        app:boxCornerRadiusBottomStart="25dp"
+        app:boxCornerRadiusBottomEnd="25dp"
+        app:endIconMode="clear_text"
+        app:layout_constraintTop_toBottomOf="@+id/banner"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias=".1">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edt_signInAccount"
+            android:drawableLeft="@drawable/icon_user"
+            android:drawablePadding="13dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/txtIptLayoutSignInPassword"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:hint="Password"
+        app:boxCornerRadiusTopStart="25dp"
+        app:boxCornerRadiusTopEnd="25dp"
+        app:boxCornerRadiusBottomStart="25dp"
+        app:boxCornerRadiusBottomEnd="25dp"
+        app:endIconMode="password_toggle"
+        app:layout_constraintTop_toBottomOf="@+id/txtIptLayoutSignInAcc"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias=".1">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edt_signInPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:id="@+id/tvAlertLoginError"
@@ -92,7 +142,7 @@
         android:layout_height="wrap_content"
         android:text="Account not existed or password error. Try again"
         android:textColor="#D32424"
-        app:layout_constraintTop_toBottomOf="@+id/edt_signInPassword"
+        app:layout_constraintTop_toBottomOf="@+id/txtIptLayoutSignInPassword"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:visibility="invisible"/>
@@ -103,7 +153,7 @@
         android:text="Forgot Password?"
         android:textStyle="bold"
         android:textSize="15sp"
-        app:layout_constraintTop_toBottomOf="@id/edt_signInPassword"
+        app:layout_constraintTop_toBottomOf="@id/txtIptLayoutSignInPassword"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -117,7 +167,7 @@
         android:text="Register Account"
         android:textStyle="bold"
         android:textSize="15sp"
-        app:layout_constraintTop_toBottomOf="@id/edt_signInPassword"
+        app:layout_constraintTop_toBottomOf="@id/txtIptLayoutSignInPassword"
         app:layout_constraintStart_toEndOf="@+id/tvForgotPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -130,7 +180,7 @@
         android:layout_height="wrap_content"
         android:text="Log IN"
         android:textSize="20sp"
-        app:layout_constraintTop_toBottomOf="@id/edt_signInPassword"
+        app:layout_constraintTop_toBottomOf="@id/txtIptLayoutSignInPassword"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
