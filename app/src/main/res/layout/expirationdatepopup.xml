@@ -26,10 +26,9 @@
             android:layout_gravity="center"
             android:src="@drawable/apple"/>
         <TextView
-            android:id="@+id/itemCategory"
+            android:id="@+id/tvItemCategoryHint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Pome Fruit"
             android:textStyle="bold"
             android:textSize="25sp"
             android:fontFamily="sans-serif-black"
@@ -46,9 +45,18 @@
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="'Pome fruit is recommended to store in fridge for maximum 2 months.'"
+            android:text="Recommended to store in fridge for "
             android:textSize="15sp"
             android:textColor="@color/white"/>
+        <TextView
+            android:id="@+id/tvItemShelfLifeHint"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:textStyle="bold"/>
         <TextView
             android:id="@+id/tvSaidBySystem"
             android:layout_width="wrap_content"

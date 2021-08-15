@@ -14,6 +14,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -34,8 +35,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -58,15 +62,15 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
     private ProgressBar pbAddItem;
 
     private StorageReference itemImageRef;
-    private DatabaseReference itemRef;
+    private DatabaseReference itemRef, itemShelfLifeRef;
     private FirebaseAuth mAuth;
     private String currentUserId, saveCurrentDate, saveCurrentTime, imgRandomName, downloadUri;
 
     private Intent intentFromFridgeActivity;
     private String itemName, itemType, itemCategory, itemStoredDate, itemExpirationDate;
-    private String fridgeKey, containerType;
+    private String fridgeKey, containerType, itemTypeHint, itemCategoryHint, itemShelfLifeHint;
 
-    private TextView tvCheckExpiry;
+    private TextView tvCheckExpiry, tvItemCategoryHint, tvItemShelfLifeHint;
     private Dialog expiryDialog;
 
     private static int Gallery_Pick = 1;
@@ -88,13 +92,15 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
         itemImageRef = FirebaseStorage.getInstance().getReference().child("users").child(currentUserId).child("fridges").child(fridgeKey).child("item images");
         itemRef = FirebaseDatabase.getInstance().getReference().child("users").child(currentUserId)
                 .child("fridges").child(fridgeKey).child(containerType).child("items");
+        itemShelfLifeRef = FirebaseDatabase.getInstance().getReference().child("shelf-life");
+
 
         // assign all the necessary item type choices into adapter,
         // set the autocomplete textview with respective adapter
         txtIptLayoutItemType = (TextInputLayout) findViewById(R.id.txtIptLayoutItemType);
         String[] itemTypes = new String[]{
-                "Vegetable",
-                "Fruit",
+                "Vegetables",
+                "Fruits",
                 "Fresh Meat",
                 "Seafood"
         };
@@ -144,7 +150,7 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
 
         // String array that consists of all fresh meat categories
         String[] itemFreshMeatCategories = new String[]{
-                "Chilled Meat",
+                "Chilled meat",
                 "Frozen Meat"
         };
         // array adapter that created by using fresh meat categories array list
@@ -171,10 +177,10 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
         dropdownItemType.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (dropdownItemType.getText().toString().equals("Vegetable")){
+                if (dropdownItemType.getText().toString().equals("Vegetables")){
                     dropdownItemCategory.setAdapter(itemVegeCategoryAdapter);
                 }
-                else if (dropdownItemType.getText().toString().equals("Fruit")){
+                else if (dropdownItemType.getText().toString().equals("Fruits")){
                     dropdownItemCategory.setAdapter(itemFruitCategoryAdapter);
                 }
                 else if (dropdownItemType.getText().toString().equals("Fresh Meat")){
@@ -223,7 +229,7 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
         tvCheckExpiry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showPopOut(v);
+                checkItemTypeCategory(v);
             }
         });
 
@@ -241,8 +247,42 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
 
     }
 
+    private void checkItemTypeCategory(View v) {
+        itemTypeHint = dropdownItemType.getText().toString().toLowerCase();
+        itemCategoryHint = dropdownItemCategory.getText().toString().toLowerCase();
+        if (TextUtils.isEmpty(itemTypeHint)){
+            dropdownItemType.setError("Please pick your item type");
+            return;
+        }
+        if (TextUtils.isEmpty(itemCategoryHint)){
+            dropdownItemCategory.setError("Please choose your item category");
+            return;
+        }
+        itemShelfLifeRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                itemShelfLifeHint = snapshot.child(itemTypeHint).child(itemCategoryHint).child("shelf-life").getValue().toString();
+                showPopOut(v);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(AddItemActivity.this, "Cancelled", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
     private void showPopOut(View v) {
         expiryDialog.setContentView(R.layout.expirationdatepopup);
+
+        // assign the retrieved item category at the pop out text view
+        tvItemCategoryHint = (TextView) expiryDialog.findViewById(R.id.tvItemCategoryHint);
+        tvItemCategoryHint.setText(itemCategoryHint);
+        // assign the retrieved item shelf life at the pop out text view
+        tvItemShelfLifeHint = (TextView) expiryDialog.findViewById(R.id.tvItemShelfLifeHint);
+        tvItemShelfLifeHint.setText(itemShelfLifeHint);
+
         imgBtnClosePopOut = expiryDialog.findViewById(R.id.imgBtnClosePopOut);
         imgBtnClosePopOut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -250,8 +290,10 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
                 expiryDialog.dismiss();
             }
         });
+
         expiryDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         expiryDialog.show();
+
     }
 
     private void returnToFridgeActivity() {
