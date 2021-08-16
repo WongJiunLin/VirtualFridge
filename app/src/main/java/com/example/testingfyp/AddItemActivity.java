@@ -45,9 +45,15 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import org.joda.time.Days;
+
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -70,8 +76,11 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
     private String currentUserId, saveCurrentDate, saveCurrentTime, imgRandomName, downloadUri;
 
     private Intent intentFromFridgeActivity;
-    private String itemName, itemType, itemCategory, itemStoredDate, itemExpirationDate;
+    private Date storedDate, expiryDate;
+    private String itemName, itemType, itemCategory, itemStoredDate, itemExpirationDate, itemExpiryDate;
     private String fridgeKey, containerType, itemTypeHint, itemCategoryHint, itemShelfLifeHint;
+
+    private Calendar calForStoredDate, calForExpiryDate;
 
     private TextView tvCheckExpiry, tvItemCategoryHint, tvItemShelfLifeHint;
     private Dialog expiryDialog;
@@ -380,9 +389,12 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
 
     private void SaveItemToFirebase() {
 
-        Calendar calForDate = Calendar.getInstance();
+        calForStoredDate = Calendar.getInstance();
         SimpleDateFormat currentDate = new SimpleDateFormat("dd-MMMM-YYYY");
-        itemStoredDate = currentDate.format(calForDate.getTime());
+        storedDate = calForStoredDate.getTime();
+        itemStoredDate = currentDate.format(storedDate);
+
+        int days = daysBetween(calForStoredDate.getTime(), calForExpiryDate.getTime());
 
         //create map to stored the current item info
         HashMap itemMap = new HashMap();
@@ -392,6 +404,7 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
         itemMap.put("itemStoredDate",itemStoredDate);
         itemMap.put("itemExpirationDate", itemExpirationDate);
         itemMap.put("itemImgUri",downloadUri);
+        itemMap.put("days",days);
 
         //store the hashmap into the firebase real-time database
         itemRef.child(itemName+itemStoredDate+saveCurrentTime).updateChildren(itemMap).addOnSuccessListener(new OnSuccessListener() {
@@ -406,6 +419,10 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
                 Toast.makeText(AddItemActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private int daysBetween(Date storedDate, Date expiryDate) {
+        return (int) ((expiryDate.getTime()-storedDate.getTime())/(1000*60*60*24));
     }
 
     private void openGallery() {
@@ -428,12 +445,13 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, month);
-        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        calForExpiryDate = Calendar.getInstance();
+        calForExpiryDate.set(Calendar.YEAR, year);
+        calForExpiryDate.set(Calendar.MONTH, month);
+        calForExpiryDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-        String currentDate = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
+        String currentDate = DateFormat.getDateInstance(DateFormat.FULL).format(calForExpiryDate.getTime());
         tvItemExpirationDate.setText(currentDate);
+
     }
 }
