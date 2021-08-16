@@ -43,23 +43,26 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class AddItemActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
-    private DatePickerDialog datePickerDialog;
-
-    private Uri imageUri;
+    private Uri imageUri, itemImgHint;
 
     private TextInputLayout txtIptLayoutItemType, txtIptLayoutItemCategory,txtIptLayoutItemExpirationDate;
     private AutoCompleteTextView dropdownItemType, dropdownItemCategory,tvItemExpirationDate;
     private TextInputEditText edtItemName;
     private ImageButton addItemButton, clearItemButton, imgBtnClosePopOut, imgBtnItemImage;
     private ProgressBar pbAddItem;
+
+    private CircleImageView civPopOutImg;
 
     private StorageReference itemImageRef;
     private DatabaseReference itemRef, itemShelfLifeRef;
@@ -258,10 +261,12 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
             dropdownItemCategory.setError("Please choose your item category");
             return;
         }
+
         itemShelfLifeRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 itemShelfLifeHint = snapshot.child(itemTypeHint).child(itemCategoryHint).child("shelf-life").getValue().toString();
+                itemImgHint = Uri.parse(snapshot.child(itemTypeHint).child(itemCategoryHint).child("imageUri").getValue().toString());
                 showPopOut(v);
             }
 
@@ -275,6 +280,10 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
 
     private void showPopOut(View v) {
         expiryDialog.setContentView(R.layout.expirationdatepopup);
+
+        // assign the retrieve item image at pop out circle img view
+        civPopOutImg = (CircleImageView) expiryDialog.findViewById(R.id.civPopOutImg);
+        Picasso.get().load(itemImgHint).into(civPopOutImg);
 
         // assign the retrieved item category at the pop out text view
         tvItemCategoryHint = (TextView) expiryDialog.findViewById(R.id.tvItemCategoryHint);
