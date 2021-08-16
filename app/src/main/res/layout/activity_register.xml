@@ -49,154 +49,92 @@
             android:visibility="invisible"
             android:layout_gravity="center"/>
 
-        <LinearLayout
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/txtIptLayoutRegUsername"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-                <TextView
-                    android:id="@+id/tvUserName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Username:"
-                    android:layout_margin="10dp"
-                    android:textStyle="bold"
-                    android:textSize="20sp"
-                    android:fontFamily="sans-serif-black" />
-            </RelativeLayout>
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:hint="Register username"
+            app:boxCornerRadiusTopStart="25dp"
+            app:boxCornerRadiusTopEnd="25dp"
+            app:boxCornerRadiusBottomStart="25dp"
+            app:boxCornerRadiusBottomEnd="25dp"
+            app:endIconMode="clear_text">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtRegUsername"
+                android:drawableLeft="@drawable/icon_user"
+                android:drawablePadding="13dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="2">
-                <EditText
-                    android:id="@+id/edtRegUsername"
-                    android:layout_width="250dp"
-                    android:layout_height="wrap_content"
-                    android:hint="Type in your username"
-                    android:background="@drawable/edittext_bg"
-                    android:drawableLeft="@drawable/icon_user"
-                    android:drawablePadding="13dp"
-                    android:layout_margin="10dp"
-                    android:padding="10dp"
-                    android:inputType="text" />
-            </RelativeLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/txtIptLayoutRegEmail"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:hint="Register email address"
+            app:boxCornerRadiusTopStart="25dp"
+            app:boxCornerRadiusTopEnd="25dp"
+            app:boxCornerRadiusBottomStart="25dp"
+            app:boxCornerRadiusBottomEnd="25dp"
+            app:endIconMode="clear_text"
+            android:layout_marginTop="10dp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtRegEmail"
+                android:drawableLeft="@drawable/icon_email"
+                android:drawablePadding="13dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
-            <RelativeLayout
-                android:layout_width="127dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0">
-                <TextView
-                    android:id="@+id/tvEmail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Email:"
-                    android:textStyle="bold"
-                    android:textSize="20sp"
-                    android:layout_margin="10dp"
-                    android:fontFamily="sans-serif-black" />
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="2">
-                <EditText
-                    android:id="@+id/edtRegEmail"
-                    android:layout_width="250dp"
-                    android:layout_height="wrap_content"
-                    android:hint="example@email.com"
-                    android:background="@drawable/edittext_bg"
-                    android:padding="10dp"
-                    android:layout_margin="10dp"
-                    android:inputType="textEmailAddress"
-                    android:drawableLeft="@drawable/icon_email"
-                    android:drawablePadding="13dp" />
-            </RelativeLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/txtIptLayoutRegPassword"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:hint="Password"
+            app:boxCornerRadiusTopStart="25dp"
+            app:boxCornerRadiusTopEnd="25dp"
+            app:boxCornerRadiusBottomStart="25dp"
+            app:boxCornerRadiusBottomEnd="25dp"
+            app:endIconMode="password_toggle"
+            android:layout_marginTop="10dp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtRegPassword"
+                android:inputType="textPassword"
+                android:drawablePadding="13dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
-            <RelativeLayout
-                android:layout_width="127dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-                <TextView
-                    android:id="@+id/tvPassword"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Password:"
-                    android:textStyle="bold"
-                    android:textSize="20sp"
-                    android:layout_margin="10dp"
-                    android:fontFamily="sans-serif-black"  />
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="2">
-                <EditText
-                    android:id="@+id/edtRegPassword"
-                    android:layout_width="250dp"
-                    android:layout_height="wrap_content"
-                    android:hint="Type your password"
-                    android:background="@drawable/edittext_bg"
-                    android:padding="10dp"
-                    android:inputType="textPassword"
-                    android:drawableLeft="@drawable/icon_lock"
-                    android:drawablePadding="13dp"
-                    android:layout_margin="10dp"/>
-            </RelativeLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/txtIptLayoutRegConfirmPassword"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <RelativeLayout
-                android:layout_width="127dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-                <TextView
-                    android:id="@+id/tvConfirmPassword"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Confirm Password:"
-                    android:textStyle="bold"
-                    android:textSize="20sp"
-                    android:layout_margin="10dp"
-                    android:fontFamily="sans-serif-black"/>
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="2">
-                <EditText
-                    android:id="@+id/edtRegConfirmPassword"
-                    android:layout_width="250dp"
-                    android:layout_height="wrap_content"
-                    android:hint="Type password again"
-                    android:background="@drawable/edittext_bg"
-                    android:padding="10dp"
-                    android:inputType="textPassword"
-                    android:drawableLeft="@drawable/icon_lock"
-                    android:drawablePadding="13dp"
-                    android:layout_margin="10dp"/>
-            </RelativeLayout>
-        </LinearLayout>
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:hint="Confirm Password"
+            app:boxCornerRadiusTopStart="25dp"
+            app:boxCornerRadiusTopEnd="25dp"
+            app:boxCornerRadiusBottomStart="25dp"
+            app:boxCornerRadiusBottomEnd="25dp"
+            app:endIconMode="password_toggle"
+            android:layout_marginTop="10dp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtRegConfirmPassword"
+                android:inputType="textPassword"
+                android:drawablePadding="13dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
         <TextView
             android:id="@+id/tvAlertAccountExisted"
             android:layout_width="wrap_content"
