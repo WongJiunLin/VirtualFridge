@@ -58,7 +58,7 @@ public class FridgeActivity extends AppCompatActivity {
         FirebaseRecyclerOptions<Item> freezerOptions =
                 new FirebaseRecyclerOptions.Builder<Item>()
                 .setQuery(FirebaseDatabase.getInstance().getReference().child("users").child(currentUserId)
-                        .child("fridges").child(fridgeKey).child("freezer").child("items"),Item.class).build();
+                        .child("fridges").child(fridgeKey).child("freezer").child("items").orderByChild("days"),Item.class).build();
         itemAdapterForFreezer = new ItemAdapter(fridgeKey,"freezer",freezerOptions);
         rvFreezer.setAdapter(itemAdapterForFreezer);
 
@@ -66,7 +66,7 @@ public class FridgeActivity extends AppCompatActivity {
         FirebaseRecyclerOptions<Item> shelfOptions =
                 new FirebaseRecyclerOptions.Builder<Item>()
                 .setQuery(FirebaseDatabase.getInstance().getReference().child("users").child(currentUserId)
-                        .child("fridges").child(fridgeKey).child("shelf").child("items"),Item.class).build();
+                        .child("fridges").child(fridgeKey).child("shelf").child("items").orderByChild("days"),Item.class).build();
         itemAdapterForShelf = new ItemAdapter(fridgeKey,"shelf",shelfOptions);
         rvShelf.setAdapter(itemAdapterForShelf);
 
@@ -74,7 +74,7 @@ public class FridgeActivity extends AppCompatActivity {
         FirebaseRecyclerOptions<Item> drawerOptions =
                 new FirebaseRecyclerOptions.Builder<Item>()
                         .setQuery(FirebaseDatabase.getInstance().getReference().child("users").child(currentUserId)
-                                .child("fridges").child(fridgeKey).child("drawer").child("items"),Item.class).build();
+                                .child("fridges").child(fridgeKey).child("drawer").child("items").orderByChild("days"),Item.class).build();
         itemAdapterForDrawer = new ItemAdapter(fridgeKey,"drawer",drawerOptions);
         rvDrawer.setAdapter(itemAdapterForDrawer);
 
