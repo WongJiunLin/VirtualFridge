@@ -15,6 +15,7 @@
         android:textSize="40sp"
         android:textAlignment="center"
         android:textStyle="bold"
+        android:textColor="@color/black"
         android:fontFamily="sans-serif-black"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -89,6 +90,7 @@
         android:text="Forgot Password?"
         android:textStyle="bold"
         android:textSize="15sp"
+        android:textColor="@color/black"
         app:layout_constraintTop_toBottomOf="@id/txtIptLayoutSignInPassword"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -103,6 +105,7 @@
         android:text="Register Account"
         android:textStyle="bold"
         android:textSize="15sp"
+        android:textColor="@color/black"
         app:layout_constraintTop_toBottomOf="@id/txtIptLayoutSignInPassword"
         app:layout_constraintStart_toEndOf="@+id/tvForgotPassword"
         app:layout_constraintEnd_toEndOf="parent"
@@ -122,7 +125,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintVertical_bias="0.3"
         app:layout_constraintWidth_percent=".5"
-        android:backgroundTint="#4C4949"/>
+        android:backgroundTint="@color/black"/>
 
     <ProgressBar
         android:id="@+id/pbLogin"

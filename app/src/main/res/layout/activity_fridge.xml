@@ -13,39 +13,49 @@
         android:layout_height="match_parent">
         <TextView
             android:id="@+id/tvFridgeNameBanner"
-            android:layout_width="match_parent"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
             android:text="Fridge Name"
+            android:textColor="@color/black"
             android:fontFamily="sans-serif-black"
             android:textSize="30sp"
             android:textAlignment="center"
-            android:padding="10dp"/>
+            android:background="@drawable/banner_bg"
+            android:padding="10dp" />
 
         <TextView
             android:id="@+id/tvFreezerBanner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Freezer"
+            android:textColor="@color/black"
             android:textSize="30sp"
             android:textStyle="bold"
-            android:padding="10dp"
-            android:background="@color/btn_color"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="30dp"
+            android:background="@drawable/banner_bg"
             android:layout_below="@+id/tvFridgeNameBanner"
             android:layout_margin="10dp"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvFreezer"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_margin="10dp"
-            android:layout_below="@+id/tvFreezerBanner"/>
         <ImageButton
             android:id="@+id/btnAddFreezer"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:background="@drawable/add_icon"
-            android:layout_below="@+id/rvFreezer"
-            android:layout_centerHorizontal="true"/>
+            android:layout_below="@+id/tvFreezerBanner"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentEnd="true"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvFreezer"
+            android:layout_width="match_parent"
+            android:layout_height="430dp"
+            android:layout_margin="10dp"
+            android:layout_below="@+id/btnAddFreezer"/>
+
 
         <TextView
             android:id="@+id/tvShelfBanner"
@@ -54,23 +64,29 @@
             android:text="Shelf"
             android:textSize="30sp"
             android:textStyle="bold"
-            android:padding="10dp"
-            android:background="@color/btn_color"
-            android:layout_below="@+id/btnAddFreezer"
+            android:textColor="@color/black"
+            android:background="@drawable/banner_bg"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="30dp"
+            android:layout_below="@+id/rvFreezer"
             android:layout_margin="10dp"/>
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvShelf"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_margin="10dp"
-            android:layout_below="@+id/tvShelfBanner"/>
+
         <ImageButton
             android:id="@+id/btnAddShelf"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:background="@drawable/add_icon"
-            android:layout_below="@+id/rvShelf"
-            android:layout_centerHorizontal="true"/>
+            android:layout_below="@+id/tvShelfBanner"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="20dp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvShelf"
+            android:layout_width="match_parent"
+            android:layout_height="430dp"
+            android:layout_margin="10dp"
+            android:layout_below="@+id/btnAddShelf"/>
 
         <TextView
             android:id="@+id/tvDrawerBanner"
@@ -79,23 +95,30 @@
             android:text="Drawer"
             android:textSize="30sp"
             android:textStyle="bold"
-            android:padding="10dp"
-            android:background="@color/btn_color"
-            android:layout_below="@+id/btnAddShelf"
+            android:textColor="@color/black"
+            android:background="@drawable/banner_bg"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="30dp"
+            android:layout_below="@+id/rvShelf"
             android:layout_margin="10dp"/>
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvDrawer"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_margin="10dp"
-            android:layout_below="@+id/tvDrawerBanner"/>
+
         <ImageButton
             android:id="@+id/btnAddDrawer"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:background="@drawable/add_icon"
-            android:layout_below="@+id/rvDrawer"
-            android:layout_centerHorizontal="true"/>
+            android:layout_below="@+id/tvDrawerBanner"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="20dp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvDrawer"
+            android:layout_width="match_parent"
+            android:layout_height="430dp"
+            android:layout_margin="10dp"
+            android:layout_below="@+id/btnAddDrawer"/>
+
     </RelativeLayout>
 
 </ScrollView>

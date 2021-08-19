@@ -2,6 +2,7 @@ package com.example.testingfyp;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +11,34 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import org.joda.time.Days;
+import org.w3c.dom.Text;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+
+import java.time.temporal.ChronoUnit;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -26,6 +48,10 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private String currentUserId = mAuth.getUid();
 
+    private String itemExpirationDate;
+    private int days;
+    private int colorAlert, colorModerate, colorSafe;
+
     public ItemAdapter(String fridgeKey, String containerType, @NonNull FirebaseRecyclerOptions<Item> options) {
         super(options);
         this.fridgeKey = fridgeKey;
@@ -34,9 +60,55 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
 
     @Override
     protected void onBindViewHolder(@NonNull ItemAdapter.myViewHolder holder, int position, @NonNull Item model) {
+
+        // obtain color code
+        colorAlert = holder.cvItem.getResources().getColor(R.color.nearlyExpired);
+        colorModerate = holder.cvItem.getResources().getColor(R.color.moderateExpired);
+        colorSafe = holder.cvItem.getResources().getColor(R.color.safeExpired);
+
+        FirebaseDatabase.getInstance().getReference()
+                .child("users").child(currentUserId).child("fridges").child(fridgeKey).child(containerType)
+                .child("items").child(getRef(position).getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String itemExpirationDate = snapshot.child("itemExpirationDate").getValue().toString();
+
+                String[] expiryDateComp = itemExpirationDate.split("-");
+                int day = Integer.valueOf(expiryDateComp[0]);
+                int month = Integer.valueOf(expiryDateComp[1]);
+                int year = Integer.valueOf(expiryDateComp[2]);
+
+                LocalDate currentDate = LocalDate.now();
+                LocalDate expirationDate = LocalDate.of(year,month,day);
+                int daysBetween = (int) ChronoUnit.DAYS.between(currentDate,expirationDate);
+
+                HashMap daysBetweenMap = new HashMap();
+                daysBetweenMap.put("days",daysBetween);
+                FirebaseDatabase.getInstance().getReference()
+                        .child("users").child(currentUserId).child("fridges").child(fridgeKey).child(containerType)
+                        .child("items").child(getRef(position).getKey()).updateChildren(daysBetweenMap);
+
+                days = Integer.parseInt(snapshot.child("days").getValue().toString());
+                if (days<=1){
+                    holder.cvItem.setCardBackgroundColor(colorAlert);
+                }else if (days>1 && days<=7){
+                    holder.cvItem.setCardBackgroundColor(colorModerate);
+                }else{
+                    holder.cvItem.setCardBackgroundColor(colorSafe);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         // display data in the item card view
         holder.cardTvItemName.setText(model.getItemName());
         holder.cardTvExpirationDate.setText(model.getItemExpirationDate());
+        holder.cardTvItemAvailableDay.setText(String.valueOf(model.getDays()));
         Picasso.get().load(model.getItemImgUri()).into(holder.cIvItemImg);
 
         // click edit button to update item info
@@ -51,9 +123,9 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
                 builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        FirebaseDatabase.getInstance().getReference().child("users").child(currentUserId)
-                                .child("fridges").child(fridgeKey).child(containerType).child("items")
-                                .child(getRef(position).getKey()).removeValue();
+                        FirebaseDatabase.getInstance().getReference()
+                                .child("users").child(currentUserId).child("fridges").child(fridgeKey).child(containerType)
+                                .child("items").child(getRef(position).getKey()).removeValue();
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -67,6 +139,7 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
         });
     }
 
+
     @NonNull
     @Override
     public myViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -77,12 +150,15 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
 
     class myViewHolder extends RecyclerView.ViewHolder{
 
+        private CardView cvItem;
         private CircleImageView cIvItemImg;
-        private TextView cardTvItemName, cardTvExpirationDate;
+        private TextView cardTvItemName, cardTvExpirationDate, cardTvItemAvailableDay;
         private Button btnEditItem, btnDeleteItem;
 
         public myViewHolder(@NonNull View itemView) {
             super(itemView);
+
+            cvItem = (CardView) itemView.findViewById(R.id.cvItem);
 
             cIvItemImg =(CircleImageView) itemView.findViewById(R.id.cardCIvItemImage);
             cardTvItemName = (TextView) itemView.findViewById(R.id.cardTvItemName);
@@ -90,6 +166,7 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
 
             btnEditItem = (Button) itemView.findViewById(R.id.btnEditItem);
             btnDeleteItem = (Button) itemView.findViewById(R.id.btnDeleteItem);
+            cardTvItemAvailableDay = (TextView) itemView.findViewById(R.id.cardTvItemAvailableDay);
 
         }
     }

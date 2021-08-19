@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cvItem"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="25dp"
+    android:layout_marginTop="10dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -47,11 +53,33 @@
             android:layout_below="@+id/cardTvItemName"
             android:layout_marginLeft="10dp"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cardTvItemAvailableDayBanner"
+            android:text="Available Day: "
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/cardCIvItemImage"
+            android:layout_below="@+id/cardTvExpirationDate"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cardTvItemAvailableDay"
+            android:text="10"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/cardTvItemAvailableDayBanner"
+            android:layout_below="@+id/cardTvExpirationDate"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:layout_marginTop="10dp"
             android:layout_below="@+id/cardCIvItemImage">
 
             <Button
@@ -59,8 +87,9 @@
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:text="Edit"
+                android:textColor="@color/white"
                 android:textAllCaps="false"
-                android:backgroundTint="@color/btn_color"
+                android:backgroundTint="@color/black"
                 android:layout_marginRight="5dp"/>
 
             <Button
@@ -68,8 +97,9 @@
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:text="Delete"
+                android:textColor="@color/white"
                 android:textAllCaps="false"
-                android:backgroundTint="@color/btn_color"
+                android:backgroundTint="@color/black"
                 android:layout_marginLeft="5dp"/>
 
         </LinearLayout>

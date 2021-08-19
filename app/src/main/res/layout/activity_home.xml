@@ -35,7 +35,7 @@
 
     </LinearLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <ImageButton
         android:id="@+id/btnAddFridge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -46,7 +46,8 @@
         app:layout_constraintVertical_bias=".8"
         app:layout_constraintHorizontal_bias=".9"
         android:backgroundTint="@color/btn_color"
-        android:src="@drawable/add_button"/>
+        android:src="@drawable/add_button"
+        app:tint="@color/white" />
 
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

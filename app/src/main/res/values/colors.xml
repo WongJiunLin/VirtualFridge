@@ -14,6 +14,9 @@
     <color name="lightgray">#D3D3D3</color>
     <color name="cobalt_blue">#0047AB</color>
     <color name="navbar_iconColor">#DFCB8F</color>
-    <color name="btn_color">#838180</color>
+    <color name="btn_color">#000000</color>
     <color name="dark_gray">#595656</color>
+    <color name="nearlyExpired">#F5B7B1 </color>
+    <color name="moderateExpired">#FAD7A0 </color>
+    <color name="safeExpired">#ABEBC6</color>
 </resources>

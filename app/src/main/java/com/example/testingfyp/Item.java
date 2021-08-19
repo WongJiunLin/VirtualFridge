@@ -5,15 +5,17 @@ import java.util.Date;
 public class Item {
     String itemName, itemStoredDate, itemExpirationDate;
     String itemImgUri;
+    int days;
 
     public Item() {
     }
 
-    public Item(String itemName, String itemStoredDate, String itemExpirationDate, String itemImgUri) {
+    public Item(String itemName, String itemStoredDate, String itemExpirationDate, String itemImgUri, int days) {
         this.itemName = itemName;
         this.itemStoredDate = itemStoredDate;
         this.itemExpirationDate = itemExpirationDate;
         this.itemImgUri = itemImgUri;
+        this.days = days;
     }
 
     public String getItemName() {
@@ -46,5 +48,13 @@ public class Item {
 
     public void setItemImgUri(String itemImgUri) {
         this.itemImgUri = itemImgUri;
+    }
+
+    public int getDays() {
+        return days;
+    }
+
+    public void setDays(int days) {
+        this.days = days;
     }
 }

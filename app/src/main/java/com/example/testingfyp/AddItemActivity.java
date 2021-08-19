@@ -65,7 +65,8 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
     private TextInputLayout txtIptLayoutItemType, txtIptLayoutItemCategory,txtIptLayoutItemExpirationDate;
     private AutoCompleteTextView dropdownItemType, dropdownItemCategory,tvItemExpirationDate;
     private TextInputEditText edtItemName;
-    private ImageButton addItemButton, clearItemButton, imgBtnClosePopOut, imgBtnItemImage;
+    private ImageButton addItemButton, clearItemButton, imgBtnClosePopOut;
+    private ImageView ivItemImage;
     private ProgressBar pbAddItem;
 
     private CircleImageView civPopOutImg;
@@ -76,7 +77,7 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
     private String currentUserId, saveCurrentDate, saveCurrentTime, imgRandomName, downloadUri;
 
     private Intent intentFromFridgeActivity;
-    private Date storedDate, expiryDate;
+    private Date storedDate, expirationDate;
     private String itemName, itemType, itemCategory, itemStoredDate, itemExpirationDate, itemExpiryDate;
     private String fridgeKey, containerType, itemTypeHint, itemCategoryHint, itemShelfLifeHint;
 
@@ -211,9 +212,9 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
 
         edtItemName = (TextInputEditText) findViewById(R.id.edtItemName);
 
-        imgBtnItemImage = (ImageButton) findViewById(R.id.imgBtnItemImage);
+        ivItemImage = (ImageView) findViewById(R.id.ivItemImage);
         // when click the adding image image view, redirect user to their device local storage to pick image
-        imgBtnItemImage.setOnClickListener(new View.OnClickListener() {
+        ivItemImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openGallery();
@@ -349,7 +350,7 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
     private void insertImageToFirebaseStorage() {
 
         Calendar calForDate = Calendar.getInstance();
-        SimpleDateFormat currentDate = new SimpleDateFormat("dd-MMMM-YYYY");
+        SimpleDateFormat currentDate = new SimpleDateFormat("dd-MM-yyyy");
         saveCurrentDate = currentDate.format(calForDate.getTime());
 
         Calendar calForTime = Calendar.getInstance();
@@ -390,11 +391,11 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
     private void SaveItemToFirebase() {
 
         calForStoredDate = Calendar.getInstance();
-        SimpleDateFormat currentDate = new SimpleDateFormat("dd-MMMM-YYYY");
+        SimpleDateFormat currentDate = new SimpleDateFormat("dd-MM-yyyy");
         storedDate = calForStoredDate.getTime();
         itemStoredDate = currentDate.format(storedDate);
 
-        int days = daysBetween(calForStoredDate.getTime(), calForExpiryDate.getTime());
+        int days = daysBetween(storedDate, expirationDate);
 
         //create map to stored the current item info
         HashMap itemMap = new HashMap();
@@ -422,7 +423,7 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
     }
 
     private int daysBetween(Date storedDate, Date expiryDate) {
-        return (int) ((expiryDate.getTime()-storedDate.getTime())/(1000*60*60*24));
+        return (int) ((expiryDate.getTime()-storedDate.getTime())/(1000*60*60*24)+1);
     }
 
     private void openGallery() {
@@ -437,7 +438,7 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode==Gallery_Pick && resultCode==RESULT_OK && data!=null && data.getData()!=null){
             imageUri = data.getData();
-            imgBtnItemImage.setImageURI(imageUri);
+            ivItemImage.setImageURI(imageUri);
         }else{
             Toast.makeText(AddItemActivity.this, "Error occurred while picking image from local storage.", Toast.LENGTH_SHORT).show();
         }
@@ -449,9 +450,12 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
         calForExpiryDate.set(Calendar.YEAR, year);
         calForExpiryDate.set(Calendar.MONTH, month);
         calForExpiryDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
-        String currentDate = DateFormat.getDateInstance(DateFormat.FULL).format(calForExpiryDate.getTime());
-        tvItemExpirationDate.setText(currentDate);
+        SimpleDateFormat currentDate = new SimpleDateFormat("dd-MM-yyyy");
+        //DateFormat.FULL
+        //String currentDate = DateFormat.getDateInstance().format(calForExpiryDate.getTime());
+        expirationDate = calForExpiryDate.getTime();
+        itemExpirationDate = currentDate.format(expirationDate);
+        tvItemExpirationDate.setText(itemExpirationDate);
 
     }
 }

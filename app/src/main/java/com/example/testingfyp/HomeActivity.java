@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageButton;
 
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -21,7 +22,7 @@ import java.util.List;
 public class HomeActivity extends AppCompatActivity {
 
     private RecyclerView rvFridgeList;
-    private FloatingActionButton btnAddFridge;
+    private ImageButton btnAddFridge;
     private FridgeAdapter fridgeAdapter;
 
     private FirebaseAuth mAuth;
@@ -37,7 +38,7 @@ public class HomeActivity extends AppCompatActivity {
         rvFridgeList = (RecyclerView) findViewById(R.id.rvFridgeList);
         rvFridgeList.setLayoutManager(new LinearLayoutManager(this));
 
-        btnAddFridge = (FloatingActionButton) findViewById(R.id.btnAddFridge);
+        btnAddFridge = (ImageButton) findViewById(R.id.btnAddFridge);
 
         FirebaseRecyclerOptions<Fridge> options =
             new FirebaseRecyclerOptions.Builder<Fridge>()
