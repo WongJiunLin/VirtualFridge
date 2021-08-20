@@ -16,14 +16,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ExpiredItemsAdapter extends FirebaseRecyclerAdapter<Item, ExpiredItemsAdapter.myViewHolder> {
 
-    private String fridgeKey;
+    private String fridgeKey, containerType;
 
     private FirebaseAuth mAuth;
     private String currentUserId;
@@ -51,6 +54,21 @@ public class ExpiredItemsAdapter extends FirebaseRecyclerAdapter<Item, ExpiredIt
         holder.cardTvItemAvailableDay.setText(String.valueOf(model.getDays()));
         Picasso.get().load(model.getItemImgUri()).into(holder.cIvItemImg);
 
+        // get the item container type
+
+        FirebaseDatabase.getInstance().getReference().child("users").child(currentUserId).child("fridges").child(fridgeKey)
+                .child("expiredItems").child(getRef(position).getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                containerType = snapshot.child("containerType").getValue().toString();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         // click edit button to update item info
         // click delete button to remove item
         holder.btnDeleteItem.setOnClickListener(new View.OnClickListener() {
@@ -67,6 +85,10 @@ public class ExpiredItemsAdapter extends FirebaseRecyclerAdapter<Item, ExpiredIt
                         FirebaseDatabase.getInstance().getReference()
                                 .child("users").child(currentUserId).child("fridges").child(fridgeKey)
                                 .child("expiredItems").child(getRef(position).getKey()).removeValue();
+                        // remove item in fridge container
+                        FirebaseDatabase.getInstance().getReference()
+                                .child("users").child(currentUserId).child("fridges").child(fridgeKey)
+                                .child(containerType).child("items").child(getRef(position).getKey()).removeValue();
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

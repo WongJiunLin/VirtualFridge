@@ -117,6 +117,7 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
                     expiredItemMap.put("itemExpirationDate",itemExpirationDate);
                     expiredItemMap.put("itemStoredDate",itemStoredDate);
                     expiredItemMap.put("itemImgUri",itemImgUri);
+                    expiredItemMap.put("containerType",containerType);
                     expiredItemMap.put("days",days);
                     FirebaseDatabase.getInstance().getReference()
                             .child("users").child(currentUserId).child("fridges").child(fridgeKey)
