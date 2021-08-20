@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TestingFYP">
-        <activity android:name=".ProfileActivity"></activity>
+        <activity android:name=".ExpiredItemsActivity"></activity>
+        <activity android:name=".ProfileActivity" />
         <activity android:name=".FridgeActivity" />
         <activity android:name=".AddFridgeActivity" />
         <activity android:name=".HomeActivity" />

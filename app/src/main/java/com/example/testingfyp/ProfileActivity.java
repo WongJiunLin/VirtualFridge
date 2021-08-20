@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,7 +26,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ProfileActivity extends AppCompatActivity {
 
     private CircleImageView civProfileImg;
-    private TextView tvProfileUsername, tvProfileEmail;
+    private TextView tvProfileUsername, tvProfileEmail, btnLogout;
 
     private FirebaseAuth mAuth;
     private DatabaseReference userProfileRef;
@@ -63,8 +64,21 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+        btnLogout = (TextView) findViewById(R.id.btnLogout);
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendToMainActivity();
+            }
+        });
+
         bottomNavigation();
 
+    }
+
+    private void sendToMainActivity() {
+        mAuth.signOut();
+        startActivity(new Intent(ProfileActivity.this, MainActivity.class));
     }
 
     private void bottomNavigation() {

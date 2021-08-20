@@ -2,6 +2,7 @@ package com.example.testingfyp;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,7 +50,6 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
     private String currentUserId = mAuth.getUid();
 
     private String itemExpirationDate;
-    private int days;
     private int colorAlert, colorModerate, colorSafe;
 
     public ItemAdapter(String fridgeKey, String containerType, @NonNull FirebaseRecyclerOptions<Item> options) {
@@ -61,6 +61,9 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
     @Override
     protected void onBindViewHolder(@NonNull ItemAdapter.myViewHolder holder, int position, @NonNull Item model) {
 
+        // current Item
+        String currentItemId = getRef(position).getKey();
+
         // obtain color code
         colorAlert = holder.cvItem.getResources().getColor(R.color.nearlyExpired);
         colorModerate = holder.cvItem.getResources().getColor(R.color.moderateExpired);
@@ -68,9 +71,16 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
 
         FirebaseDatabase.getInstance().getReference()
                 .child("users").child(currentUserId).child("fridges").child(fridgeKey).child(containerType)
-                .child("items").child(getRef(position).getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                .child("items").child(currentItemId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                // get the item info
+                String itemName = snapshot.child("itemName").getValue().toString();
+                String itemStoredDate = snapshot.child("itemStoredDate").getValue().toString();
+                String itemImgUri = snapshot.child("itemImgUri").getValue().toString();
+
+
                 String itemExpirationDate = snapshot.child("itemExpirationDate").getValue().toString();
 
                 String[] expiryDateComp = itemExpirationDate.split("-");
@@ -88,13 +98,30 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
                         .child("users").child(currentUserId).child("fridges").child(fridgeKey).child(containerType)
                         .child("items").child(getRef(position).getKey()).updateChildren(daysBetweenMap);
 
-                days = Integer.parseInt(snapshot.child("days").getValue().toString());
+                int days = Integer.parseInt(snapshot.child("days").getValue().toString());
                 if (days<=1){
                     holder.cvItem.setCardBackgroundColor(colorAlert);
-                }else if (days>1 && days<=7){
+                }
+                else if (days>1 && days<=7){
                     holder.cvItem.setCardBackgroundColor(colorModerate);
-                }else{
+                }
+                else if(days>7){
                     holder.cvItem.setCardBackgroundColor(colorSafe);
+                }
+
+                // if the item is expired, stored it at another branch
+                if (days <= 0){
+
+                    HashMap expiredItemMap = new HashMap();
+                    expiredItemMap.put("itemName",itemName);
+                    expiredItemMap.put("itemExpirationDate",itemExpirationDate);
+                    expiredItemMap.put("itemStoredDate",itemStoredDate);
+                    expiredItemMap.put("itemImgUri",itemImgUri);
+                    expiredItemMap.put("days",days);
+                    FirebaseDatabase.getInstance().getReference()
+                            .child("users").child(currentUserId).child("fridges").child(fridgeKey)
+                            .child("expiredItems").child(getRef(position).getKey()).updateChildren(expiredItemMap);
+
                 }
 
             }
@@ -123,9 +150,16 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
                 builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        // remove item in respective fridge
                         FirebaseDatabase.getInstance().getReference()
                                 .child("users").child(currentUserId).child("fridges").child(fridgeKey).child(containerType)
                                 .child("items").child(getRef(position).getKey()).removeValue();
+
+                        //remove respective item in expired item list
+                        FirebaseDatabase.getInstance().getReference()
+                                .child("users").child(currentUserId).child("fridges").child(fridgeKey).child("expiredItems")
+                                .child(getRef(position).getKey()).removeValue();
+
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

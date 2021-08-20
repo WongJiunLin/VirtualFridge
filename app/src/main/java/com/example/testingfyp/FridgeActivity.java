@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -23,6 +24,8 @@ public class FridgeActivity extends AppCompatActivity {
     private RecyclerView rvFreezer, rvShelf, rvDrawer;
     private ImageButton btnFreezerAdd, btnShelfAdd, btnDrawerAdd;
     private ItemAdapter itemAdapterForFreezer, itemAdapterForShelf, itemAdapterForDrawer;
+
+    private Button  btnCheckExpiredItems;
 
     private FirebaseAuth mAuth;
     private String currentUserId;
@@ -53,6 +56,14 @@ public class FridgeActivity extends AppCompatActivity {
         String fridgeKey = intentFromFridgeAdapter.getStringExtra("fridgeKey");
         tvFridgeNameBanner = findViewById(R.id.tvFridgeNameBanner);
         tvFridgeNameBanner.setText(fridgeName);
+
+        // while click on the tvFridgeNameBanner and close current activity
+        tvFridgeNameBanner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         // set up the recycler options for the freezer
         FirebaseRecyclerOptions<Item> freezerOptions =
@@ -115,7 +126,18 @@ public class FridgeActivity extends AppCompatActivity {
             }
         });
 
+        btnCheckExpiredItems = (Button) findViewById(R.id.btnCheckExpiredItems);
+        btnCheckExpiredItems.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentToExpiredItems = new Intent(FridgeActivity.this, ExpiredItemsActivity.class);
+                intentToExpiredItems.putExtra("fridgeKey",fridgeKey);
+                startActivity(intentToExpiredItems);
+            }
+        });
+
     }
+
 
     @Override
     protected void onStart() {

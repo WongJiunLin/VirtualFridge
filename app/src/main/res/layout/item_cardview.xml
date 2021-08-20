@@ -43,13 +43,24 @@
             android:layout_marginLeft="10dp"/>
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cardTvExpirationBanner"
+            android:text="Expiry:"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:layout_toRightOf="@+id/cardCIvItemImage"
+            android:layout_below="@+id/cardTvItemName"
+            android:layout_marginLeft="10dp"/>
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/cardTvExpirationDate"
             android:text="20 Jun 2021"
             android:textSize="20sp"
             android:textColor="@color/black"
-            android:layout_toRightOf="@+id/cardCIvItemImage"
+            android:layout_toRightOf="@+id/cardTvExpirationBanner"
             android:layout_below="@+id/cardTvItemName"
             android:layout_marginLeft="10dp"/>
 

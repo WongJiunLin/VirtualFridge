@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">TestingFYP</string>
-    
+
     <string-array name="item_types">
         <item>Vegetable</item>
         <item>Fruit</item>

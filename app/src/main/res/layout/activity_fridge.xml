@@ -13,17 +13,31 @@
         android:layout_height="match_parent">
         <TextView
             android:id="@+id/tvFridgeNameBanner"
-            android:layout_width="300dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
             android:text="Fridge Name"
+            android:drawableLeft="@drawable/icon_back_arrow"
             android:textColor="@color/black"
             android:fontFamily="sans-serif-black"
             android:textSize="30sp"
             android:textAlignment="center"
             android:background="@drawable/banner_bg"
+            android:layout_margin="10dp"
             android:padding="10dp" />
+
+        <Button
+            android:id="@+id/btnCheckExpiredItems"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Check Expired Items"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:padding="10dp"
+            android:layout_below="@+id/tvFridgeNameBanner"
+            android:backgroundTint="@color/black"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"/>
 
         <TextView
             android:id="@+id/tvFreezerBanner"
@@ -37,7 +51,7 @@
             android:paddingBottom="10dp"
             android:paddingLeft="30dp"
             android:background="@drawable/banner_bg"
-            android:layout_below="@+id/tvFridgeNameBanner"
+            android:layout_below="@+id/btnCheckExpiredItems"
             android:layout_margin="10dp"/>
 
         <ImageButton
