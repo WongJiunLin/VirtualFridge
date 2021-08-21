@@ -83,7 +83,7 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
 
     private Calendar calForStoredDate, calForExpiryDate;
 
-    private TextView tvCheckExpiry, tvItemCategoryHint, tvItemShelfLifeHint;
+    private TextView tvCheckExpiry, tvItemCategoryHint, tvItemShelfLifeHint, tvAddItemBanner;
     private Dialog expiryDialog;
 
     private static int Gallery_Pick = 1;
@@ -106,7 +106,6 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
         itemRef = FirebaseDatabase.getInstance().getReference().child("users").child(currentUserId)
                 .child("fridges").child(fridgeKey).child(containerType).child("items");
         itemShelfLifeRef = FirebaseDatabase.getInstance().getReference().child("shelf-life");
-
 
         // assign all the necessary item type choices into adapter,
         // set the autocomplete textview with respective adapter
@@ -208,8 +207,6 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
         });
 
 
-
-
         edtItemName = (TextInputEditText) findViewById(R.id.edtItemName);
 
         ivItemImage = (ImageView) findViewById(R.id.ivItemImage);
@@ -255,6 +252,15 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
             public void onClick(View v) {
                 DialogFragment datePicker = new DatePickerFragment();
                 datePicker.show(getSupportFragmentManager(),"date picker");
+            }
+        });
+
+        // while click on the back button close current activity
+        tvAddItemBanner = (TextView) findViewById(R.id.tvAddItemBanner);
+        tvAddItemBanner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
 
@@ -386,6 +392,7 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
                 Toast.makeText(AddItemActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+
     }
 
     private void SaveItemToFirebase() {

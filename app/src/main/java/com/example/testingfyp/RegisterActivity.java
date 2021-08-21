@@ -42,7 +42,7 @@ public class RegisterActivity extends AppCompatActivity {
     private Button btnRegisterAccInfo;
     private ImageButton imgBtnRegAccProfileImg;
     private ProgressBar pbRegAccInfo;
-    private TextView tvAlertPickProfileImg, tvAlertAccountExisted;
+    private TextView tvAlertPickProfileImg, tvAlertAccountExisted, tvRegAccBanner;
 
     private FirebaseAuth mAuth;
     private DatabaseReference userProfileRef;
@@ -87,6 +87,14 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 validateAccountInfo();
+            }
+        });
+
+        tvRegAccBanner = (TextView) findViewById(R.id.tvRegAccBanner);
+        tvRegAccBanner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
 

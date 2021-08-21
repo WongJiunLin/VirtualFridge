@@ -15,9 +15,11 @@
         android:textSize="30sp"
         android:padding="10dp"
         android:textStyle="bold"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:fontFamily="sans-serif-black"
-        android:background="@drawable/navbar_bg"
+        android:background="@drawable/app_bg"
+        android:drawableLeft="@drawable/icon_back_arrow"
+        android:drawablePadding="10dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
