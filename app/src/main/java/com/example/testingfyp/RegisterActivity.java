@@ -40,7 +40,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private EditText edtRegUsername, edtRegEmail, edtRegPassword, edtRegConfirmPassword;
     private Button btnRegisterAccInfo;
-    private ImageButton imgBtnRegAccProfileImg;
+    private ImageView ivRegAccProfileImg;
     private ProgressBar pbRegAccInfo;
     private TextView tvAlertPickProfileImg, tvAlertAccountExisted, tvRegAccBanner;
 
@@ -65,7 +65,7 @@ public class RegisterActivity extends AppCompatActivity {
         edtRegConfirmPassword = (EditText) findViewById(R.id.edtRegConfirmPassword);
 
         btnRegisterAccInfo = (Button) findViewById(R.id.btnRegisterAccInfo);
-        imgBtnRegAccProfileImg = (ImageButton) findViewById(R.id.imgBtnRegAccProfileImg);
+        ivRegAccProfileImg = (ImageView) findViewById(R.id.ivRegAccProfileImg);
 
         tvAlertPickProfileImg = (TextView) findViewById(R.id.tvAlertPickProfileImg);
         tvAlertAccountExisted = (TextView) findViewById(R.id.tvAlertAccountExisted);
@@ -75,7 +75,7 @@ public class RegisterActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         // while user click on the image view redirect user to their local device image gallery
-        imgBtnRegAccProfileImg.setOnClickListener(new View.OnClickListener() {
+        ivRegAccProfileImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openGallery();
@@ -127,11 +127,11 @@ public class RegisterActivity extends AppCompatActivity {
             edtRegConfirmPassword.setError("Confirm password should be same as previous password");
             return;
         }
-        if (imgBtnRegAccProfileImg.getDrawable()==null){
+        if (ivRegAccProfileImg.getDrawable()==null){
             tvAlertPickProfileImg.setVisibility(View.VISIBLE);
             return;
         }
-        if (imgBtnRegAccProfileImg.getDrawable()!=null){
+        if (ivRegAccProfileImg.getDrawable()!=null){
             tvAlertPickProfileImg.setVisibility(View.INVISIBLE);
         }
 
@@ -265,7 +265,7 @@ public class RegisterActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode==Gallery_Pick && resultCode==RESULT_OK && data!=null && data.getData()!=null){
             profileImgUri = data.getData();
-            imgBtnRegAccProfileImg.setImageURI(profileImgUri);
+            ivRegAccProfileImg.setImageURI(profileImgUri);
         }else{
             Toast.makeText(RegisterActivity.this, "Error occurred while picking image from local storage.", Toast.LENGTH_SHORT).show();
         }

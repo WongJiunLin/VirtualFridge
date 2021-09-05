@@ -34,12 +34,12 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <ImageButton
-            android:id="@+id/imgBtnRegAccProfileImg"
+        <ImageView
+            android:id="@+id/ivRegAccProfileImg"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_gravity="center"
-            android:background="@drawable/add_profile_img_icon"
+            android:src="@drawable/add_profile_img_icon"
             app:layout_constraintVertical_bias="0"/>
 
         <TextView
