@@ -114,7 +114,8 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
                 "Vegetables",
                 "Fruits",
                 "Fresh Meat",
-                "Seafood"
+                "Seafood",
+                "Others"
         };
         ArrayAdapter<String> itemTypeAdapter = new ArrayAdapter<>(
                 AddItemActivity.this,
@@ -200,7 +201,11 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
                 }
                 else if (dropdownItemType.getText().toString().equals("Seafood")){
                     dropdownItemCategory.setAdapter(itemSeafoodCategoryAdapter);
-                }else{
+                }
+                else if(dropdownItemType.getText().toString().equals("Others")){
+                    dropdownItemCategory.setText("Others");
+                }
+                else{
                     dropdownItemType.setError("Select your item type first");
                 }
             }
@@ -223,14 +228,6 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
             @Override
             public void onClick(View v) {
                 validateItemInfo();
-            }
-        });
-        // click on the clear button to redirect back to fridge page
-        clearItemButton = (ImageButton) findViewById(R.id.clearItemButton);
-        clearItemButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                returnToFridgeActivity();
             }
         });
 
@@ -269,6 +266,7 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
     private void checkItemTypeCategory(View v) {
         itemTypeHint = dropdownItemType.getText().toString().toLowerCase();
         itemCategoryHint = dropdownItemCategory.getText().toString().toLowerCase();
+
         if (TextUtils.isEmpty(itemTypeHint)){
             dropdownItemType.setError("Please pick your item type");
             return;
@@ -277,36 +275,55 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
             dropdownItemCategory.setError("Please choose your item category");
             return;
         }
+        if (itemTypeHint.equals("others")){
+            showPopOut(v);
+        }
+        else{
+            itemShelfLifeRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    itemShelfLifeHint = snapshot.child(itemTypeHint).child(itemCategoryHint).child("shelf-life").getValue().toString();
+                    itemImgHint = Uri.parse(snapshot.child(itemTypeHint).child(itemCategoryHint).child("imageUri").getValue().toString());
+                    showPopOut(v);
+                }
 
-        itemShelfLifeRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                itemShelfLifeHint = snapshot.child(itemTypeHint).child(itemCategoryHint).child("shelf-life").getValue().toString();
-                itemImgHint = Uri.parse(snapshot.child(itemTypeHint).child(itemCategoryHint).child("imageUri").getValue().toString());
-                showPopOut(v);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(AddItemActivity.this, "Cancelled", Toast.LENGTH_SHORT).show();
-            }
-        });
-
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toast.makeText(AddItemActivity.this, "Cancelled", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     private void showPopOut(View v) {
+
         expiryDialog.setContentView(R.layout.expirationdatepopup);
 
         // assign the retrieve item image at pop out circle img view
         civPopOutImg = (CircleImageView) expiryDialog.findViewById(R.id.civPopOutImg);
-        Picasso.get().load(itemImgHint).into(civPopOutImg);
+        if (itemTypeHint.equals("others")){
+            civPopOutImg.setImageResource(R.drawable.icon_not_found);
+        }else{
+            Picasso.get().load(itemImgHint).into(civPopOutImg);
+        }
 
         // assign the retrieved item category at the pop out text view
         tvItemCategoryHint = (TextView) expiryDialog.findViewById(R.id.tvItemCategoryHint);
-        tvItemCategoryHint.setText(itemCategoryHint);
+        if (itemTypeHint.equals("others")){
+            tvItemCategoryHint.setText("Others");
+        }
+        else {
+            tvItemCategoryHint.setText(itemCategoryHint);
+        }
+
         // assign the retrieved item shelf life at the pop out text view
         tvItemShelfLifeHint = (TextView) expiryDialog.findViewById(R.id.tvItemShelfLifeHint);
-        tvItemShelfLifeHint.setText(itemShelfLifeHint);
+        if (itemTypeHint.equals("others")){
+            tvItemShelfLifeHint.setText("Storing Duration Not Found");
+        }
+        else{
+            tvItemShelfLifeHint.setText(itemShelfLifeHint);
+        }
 
         imgBtnClosePopOut = expiryDialog.findViewById(R.id.imgBtnClosePopOut);
         imgBtnClosePopOut.setOnClickListener(new View.OnClickListener() {
@@ -321,9 +338,6 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
 
     }
 
-    private void returnToFridgeActivity() {
-        startActivity(new Intent(AddItemActivity.this, FridgeActivity.class));
-    }
 
     private void validateItemInfo() {
 
