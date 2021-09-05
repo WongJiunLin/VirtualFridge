@@ -127,12 +127,9 @@ public class RegisterActivity extends AppCompatActivity {
             edtRegConfirmPassword.setError("Confirm password should be same as previous password");
             return;
         }
-        if (ivRegAccProfileImg.getDrawable()==null){
+        if (ivRegAccProfileImg.getDrawable().getConstantState()==getResources().getDrawable(R.drawable.add_profile_img_icon).getConstantState()){
             tvAlertPickProfileImg.setVisibility(View.VISIBLE);
             return;
-        }
-        if (ivRegAccProfileImg.getDrawable()!=null){
-            tvAlertPickProfileImg.setVisibility(View.INVISIBLE);
         }
 
         // if valid check account existed or not
