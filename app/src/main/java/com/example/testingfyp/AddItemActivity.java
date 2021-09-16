@@ -374,7 +374,7 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
         saveCurrentDate = currentDate.format(calForDate.getTime());
 
         Calendar calForTime = Calendar.getInstance();
-        SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss");
         saveCurrentTime = currentTime.format(calForTime.getTime());
 
         // generate the image file name using the current date and time and the img last path
