@@ -22,9 +22,9 @@
             android:padding="10dp"
             android:textSize="30sp"
             android:textStyle="bold"
-            android:textColor="@color/black"
+            android:textColor="#F3EFEF"
             android:fontFamily="sans-serif-black"
-            android:background="@drawable/app_bg"/>
+            android:background="@drawable/navbar_bg"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvFridgeList"

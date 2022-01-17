@@ -2,6 +2,7 @@ package com.example.testingfyp;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -139,7 +140,19 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
         holder.cardTvItemAvailableDay.setText(String.valueOf(model.getDays()));
         Picasso.get().load(model.getItemImgUri()).into(holder.cIvItemImg);
 
-        // click edit button to update item info
+        // click edit button to proceed to edit item activity
+        holder.btnEditItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String curItemId = getRef(position).getKey();
+                Intent intent = new Intent(v.getContext(), EditItemActivity.class);
+                intent.putExtra("fridgeKey", fridgeKey);
+                intent.putExtra("containerType", containerType);
+                intent.putExtra("curItemId", curItemId);
+                v.getContext().startActivity(intent);
+            }
+        });
+
         // click delete button to remove item
         holder.btnDeleteItem.setOnClickListener(new View.OnClickListener() {
             @Override
