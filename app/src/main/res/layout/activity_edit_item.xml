@@ -47,10 +47,10 @@
         app:boxCornerRadiusTopEnd="16dp"
         app:boxCornerRadiusBottomStart="16dp"
         app:boxCornerRadiusBottomEnd="16dp"
-        app:helperText="You can type item name here"
+        app:helperText="You cannot change the item name"
         app:counterEnabled="true"
         app:counterMaxLength="30"
-        app:endIconMode="clear_text"
+        app:endIconMode="none"
         app:layout_constraintTop_toBottomOf="@+id/ivEditItemImage"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -58,7 +58,6 @@
         app:layout_constraintVertical_bias=".05">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edtItemName"
-            android:inputType="none"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </com.google.android.material.textfield.TextInputLayout>
@@ -169,7 +168,7 @@
 
 
     <ProgressBar
-        android:id="@+id/pbItem"
+        android:id="@+id/pbEditItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
