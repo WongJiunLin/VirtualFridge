@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/friend_list"
+        android:icon="@drawable/friendlist_icon"
+        android:checkable="true"
+        android:title="FRIEND LIST"/>
+    <item android:id="@+id/search_friend"
+        android:icon="@drawable/icon_search_friend"
+        android:checkable="true"
+        android:title="SEARCH FRIEND"/>
+    <item android:id="@+id/friend_request"
+        android:icon="@drawable/icon_friend_request"
+        android:checkable="true"
+        android:title="FRIEND REQUEST"/>
+</menu>

@@ -11,7 +11,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TestingFYP">
-        <activity android:name=".EditItemActivity"></activity>
+        <activity android:name=".SearchFriendActivity" />
+        <activity android:name=".FriendListActivity" />
+        <activity android:name=".EditItemActivity" />
         <activity android:name=".ExpiredItemsActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".FridgeActivity" />

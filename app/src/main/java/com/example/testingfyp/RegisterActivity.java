@@ -167,7 +167,8 @@ public class RegisterActivity extends AppCompatActivity {
             public void onSuccess(AuthResult authResult) {
                 // once the account had registered successfully, get current user id to store user profile info into firebase
                 currentUserId = mAuth.getUid();
-                userProfileRef = FirebaseDatabase.getInstance().getReference().child("users").child(currentUserId).child("user profile");
+                //userProfileRef = FirebaseDatabase.getInstance().getReference().child("users").child(currentUserId).child("user profile");
+                userProfileRef = FirebaseDatabase.getInstance().getReference().child("users").child(currentUserId);
                 userProfileImgRef = FirebaseStorage.getInstance().getReference().child("users").child(currentUserId).child("profile image");
 
                 Toast.makeText(RegisterActivity.this, "Successfully created account", Toast.LENGTH_SHORT).show();
@@ -226,7 +227,7 @@ public class RegisterActivity extends AppCompatActivity {
         HashMap profileMap = new HashMap();
         profileMap.put("username", username);
         profileMap.put("email", emailAcc);
-        profileMap.put("profile image",downloadUri);
+        profileMap.put("profileImgUri",downloadUri);
 
         userProfileRef.updateChildren(profileMap).addOnSuccessListener(new OnSuccessListener() {
             @Override

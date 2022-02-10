@@ -45,7 +45,8 @@ public class ProfileActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         currentUserId = mAuth.getUid();
 
-        userProfileRef = FirebaseDatabase.getInstance().getReference().child("users").child(currentUserId).child("user profile");
+        //userProfileRef = FirebaseDatabase.getInstance().getReference().child("users").child(currentUserId).child("user profile");
+        userProfileRef = FirebaseDatabase.getInstance().getReference().child("users").child(currentUserId);
         userProfileRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -54,7 +55,7 @@ public class ProfileActivity extends AppCompatActivity {
                 tvProfileUsername.setText(username);
                 String email = snapshot.child("email").getValue().toString();
                 tvProfileEmail.setText(email);
-                Uri profileImgUri = Uri.parse(snapshot.child("profile image").getValue().toString());
+                Uri profileImgUri = Uri.parse(snapshot.child("profileImgUri").getValue().toString());
                 Picasso.get().load(profileImgUri).into(civProfileImg);
             }
 
@@ -86,29 +87,28 @@ public class ProfileActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav_bottom);
         bottomNavigationView.setSelectedItemId(R.id.profile);
         bottomNavigationView.setOnItemSelectedListener(item -> {
-            switch(item.getItemId()){
+            switch (item.getItemId()){
                 case R.id.home:
                     item.setChecked(true);
-                    Intent intent1 = new Intent(ProfileActivity.this, HomeActivity.class);
-                    startActivity(intent1);
-                    overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
+                    startActivity(new Intent(ProfileActivity.this, HomeActivity.class));
+                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                     finish();
+                    break;
                 case R.id.shoppinglist:
                     item.setChecked(true);
-                    Intent intent2 = new Intent(ProfileActivity.this, HomeActivity.class);
-                    startActivity(intent2);
-                    overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
+                    startActivity(new Intent(ProfileActivity.this, HomeActivity.class));
+                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                     finish();
+                    break;
                 case R.id.friendlist:
                     item.setChecked(true);
-                    Intent intent3 = new Intent(ProfileActivity.this, HomeActivity.class);
-                    startActivity(intent3);
-                    overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
+                    startActivity(new Intent(ProfileActivity.this, FriendListActivity.class));
+                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                     finish();
+                    break;
                 case R.id.profile:
                     item.setChecked(true);
                     break;
-
             }
             return false;
         });

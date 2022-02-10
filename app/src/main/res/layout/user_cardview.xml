@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cvUser"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="25dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/add_profile_img_icon"
+            android:id="@+id/cardCIvUserProfileImg" />
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:id="@+id/cardTvUsernameBanner"-->
+<!--            android:text="User:"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textSize="25sp"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:layout_toRightOf="@+id/cardCIvUserProfileImg"-->
+<!--            android:layout_marginLeft="20dp"-->
+<!--            android:layout_marginTop="20dp"/>-->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/cardTvUsername"
+            android:text="Username"
+            android:textStyle="bold"
+            android:textSize="25sp"
+            android:textColor="@color/black"
+            android:layout_toRightOf="@+id/cardCIvUserProfileImg"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"/>
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

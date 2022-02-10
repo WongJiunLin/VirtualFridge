@@ -9,7 +9,7 @@
         android:checkable="true"
         android:title="SHOPPING LIST"/>
     <item android:id="@+id/friendlist"
-        android:icon="@drawable/list_icon"
+        android:icon="@drawable/friendlist_icon"
         android:checkable="true"
         android:title="FRIENDS"/>
     <item android:id="@+id/profile"
