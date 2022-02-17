@@ -1,20 +1,52 @@
 package com.example.testingfyp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class FriendListActivity extends AppCompatActivity {
+
+    private RecyclerView rvFriendList;
+
+    private FirebaseAuth mAuth;
+    private String currentUserID;
+
+    private FriendListAdapter friendListAdapter;
+    private DatabaseReference friendsRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_list);
 
+        mAuth = FirebaseAuth.getInstance();
+        currentUserID = mAuth.getUid();
+
+        rvFriendList = (RecyclerView) findViewById(R.id.rvFriendList);
+        rvFriendList.setLayoutManager(new LinearLayoutManager(this));
+        displayFriendList();
+
+
         bottomNavigation();
+    }
+
+    private void displayFriendList() {
+        FirebaseRecyclerOptions<Friend> options =
+                new FirebaseRecyclerOptions.Builder<Friend>()
+                        .setQuery(FirebaseDatabase.getInstance().getReference().child("friends").child(currentUserID), Friend.class)
+                        .build();
+        friendListAdapter = new FriendListAdapter(options);
+        friendListAdapter.startListening();
+        rvFriendList.setAdapter(friendListAdapter);
     }
 
 
@@ -60,12 +92,12 @@ public class FriendListActivity extends AppCompatActivity {
                 case R.id.search_friend:
                     item.setChecked(true);
                     startActivity(new Intent(FriendListActivity.this, SearchFriendActivity.class));
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    //overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     finish();
                 case R.id.friend_request:
                     item.setChecked(true);
                     startActivity(new Intent(FriendListActivity.this, SearchFriendActivity.class));
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    //overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     finish();
             }
             return false;

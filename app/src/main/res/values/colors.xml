@@ -19,4 +19,6 @@
     <color name="nearlyExpired">#F5B7B1 </color>
     <color name="moderateExpired">#FAD7A0 </color>
     <color name="safeExpired">#ABEBC6</color>
+    <color name="requestFriend">#97CA5C</color>
+    <color name="declineFriend">#E14242</color>
 </resources>

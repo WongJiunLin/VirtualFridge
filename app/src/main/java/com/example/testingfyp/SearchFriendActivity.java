@@ -98,7 +98,7 @@ public class SearchFriendActivity extends AppCompatActivity {
                 case R.id.friend_list:
                     item.setChecked(true);
                     startActivity(new Intent(SearchFriendActivity.this, FriendListActivity.class));
-                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                    //overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                     finish();
                 case R.id.search_friend:
                     item.setChecked(true);
@@ -106,7 +106,7 @@ public class SearchFriendActivity extends AppCompatActivity {
                 case R.id.friend_request:
                     item.setChecked(true);
                     startActivity(new Intent(SearchFriendActivity.this, FriendListActivity.class));
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    //overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     finish();
             }
             return false;
@@ -119,9 +119,9 @@ public class SearchFriendActivity extends AppCompatActivity {
 //        userAdapter.startListening();
 //    }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        userAdapter.stopListening();
-    }
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        userAdapter.stopListening();
+//    }
 }
