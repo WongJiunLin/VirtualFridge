@@ -6,13 +6,15 @@ import java.util.List;
 public class Fridge {
     String fridgeName;
     String fridgeCreatedDate;
+    String createdBy;
 
     public Fridge() {
     }
 
-    public Fridge(String fridgeName, String fridgeCreatedDate) {
+    public Fridge(String fridgeName, String fridgeCreatedDate, String createdBy) {
         this.fridgeName = fridgeName;
         this.fridgeCreatedDate = fridgeCreatedDate;
+        this.createdBy = createdBy;
     }
 
     public String getFridgeName() {
@@ -30,4 +32,12 @@ public class Fridge {
     public void setFridgeCreatedDate(String fridgeCreatedDate) {
         this.fridgeCreatedDate = fridgeCreatedDate;
     }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
 }
+

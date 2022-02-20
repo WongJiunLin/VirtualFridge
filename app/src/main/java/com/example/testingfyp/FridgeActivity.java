@@ -22,7 +22,7 @@ public class FridgeActivity extends AppCompatActivity {
     private TextView tvFridgeNameBanner;
 
     private RecyclerView rvFreezer, rvShelf, rvDrawer;
-    private ImageButton btnFreezerAdd, btnShelfAdd, btnDrawerAdd;
+    private ImageButton btnFreezerAdd, btnShelfAdd, btnDrawerAdd, imgBtnBack;
     private ItemAdapter itemAdapterForFreezer, itemAdapterForShelf, itemAdapterForDrawer;
 
     private Button  btnCheckExpiredItems;
@@ -57,8 +57,10 @@ public class FridgeActivity extends AppCompatActivity {
         tvFridgeNameBanner = findViewById(R.id.tvFridgeNameBanner);
         tvFridgeNameBanner.setText(fridgeName);
 
+        imgBtnBack = findViewById(R.id.imgBtnBack);
+
         // while click on the tvFridgeNameBanner and close current activity
-        tvFridgeNameBanner.setOnClickListener(new View.OnClickListener() {
+        imgBtnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();

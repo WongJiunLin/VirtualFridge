@@ -11,6 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TestingFYP">
+        <activity android:name=".AddParticipantsActivity"></activity>
+        <activity android:name=".FriendRequestActivity" />
         <activity android:name=".SearchFriendActivity" />
         <activity android:name=".FriendListActivity" />
         <activity android:name=".EditItemActivity" />

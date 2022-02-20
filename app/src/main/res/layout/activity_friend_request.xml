@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchFriendActivity"
+    tools:context=".FriendRequestActivity"
     android:background="@drawable/app_bg">
 
     <LinearLayout
@@ -16,10 +16,10 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tvFriendListBanner"
+            android:id="@+id/tvFriendRequestBanner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Search Friends"
+            android:text="Friend Requests"
             android:textSize="30sp"
             android:textStyle="bold"
             android:fontFamily="sans-serif-black"
@@ -37,20 +37,10 @@
             app:itemTextColor="@color/icon_color_friendlist_navbar"
             android:background="@drawable/navbar_friendlist_bg"/>
 
-        <SearchView
-            android:id="@+id/svSearchUsername"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvFriendRequest"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            android:iconifiedByDefault="false"
-            android:queryHint="Find username here..."
-            android:background="@drawable/input_effect"/>
-
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvSearchFriendResult"
-            android:layout_width="match_parent"
-            android:layout_height="380dp"
             android:layout_margin="10dp"/>
 
     </LinearLayout>

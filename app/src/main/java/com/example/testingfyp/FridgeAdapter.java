@@ -62,6 +62,7 @@ public class FridgeAdapter extends FirebaseRecyclerAdapter<Fridge, FridgeAdapter
                     public void onClick(DialogInterface dialog, int which) {
                         FirebaseDatabase.getInstance().getReference().child("users").child(currentUserId)
                                 .child("fridges").child(getRef(position).getKey()).removeValue();
+                        FridgeAdapter.this.notifyDataSetChanged();
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

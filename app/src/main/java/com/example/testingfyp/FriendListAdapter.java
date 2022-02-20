@@ -48,15 +48,16 @@ public class FriendListAdapter extends FirebaseRecyclerAdapter<Friend, FriendLis
 
     @Override
     protected void onBindViewHolder(@NonNull FriendListAdapter.myViewHolder holder, int position, @NonNull Friend model) {
-        final String userIDs = getRef(position).getKey();
+        targetUserID = getRef(position).getKey();
 
-        userRef = FirebaseDatabase.getInstance().getReference().child("users").child(userIDs);
-        userRef.addValueEventListener(new ValueEventListener() {
+        friendsRef = FirebaseDatabase.getInstance().getReference().child("friends");
+        userRef = FirebaseDatabase.getInstance().getReference().child("users").child(targetUserID);
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()){
-                    final String username = snapshot.child("username").getValue().toString();
-                    final String profileImgUri = snapshot.child("profileImgUri").getValue().toString();
+                    String username = snapshot.child("username").getValue().toString();
+                    String profileImgUri = snapshot.child("profileImgUri").getValue().toString();
 
                     Picasso.get().load(profileImgUri).into(holder.cardCIvUserProfileImg);
                     holder.cardTvUsername.setText(username);
@@ -79,7 +80,7 @@ public class FriendListAdapter extends FirebaseRecyclerAdapter<Friend, FriendLis
     }
 
     private void showFriendPopOut(View v, Friend model, int position) {
-        final Dialog userDialog = new Dialog(v.getContext());
+        Dialog userDialog = new Dialog(v.getContext());
         userDialog.setContentView(R.layout.userinfopopout);
         civPopOutProfileImg = userDialog.findViewById(R.id.civPopOutProfileImg);
         tvPopOutUsername = userDialog.findViewById(R.id.tvPopOutUsername);
@@ -91,18 +92,17 @@ public class FriendListAdapter extends FirebaseRecyclerAdapter<Friend, FriendLis
         btnDeclineFriendRequest.setVisibility(View.INVISIBLE);
         btnDeclineFriendRequest.setEnabled(false);
 
-        friendsRef = FirebaseDatabase.getInstance().getReference().child("friends");
-
         currentUID = FirebaseAuth.getInstance().getUid();
         targetUserID = getRef(position).getKey();
 
-        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        FirebaseDatabase.getInstance().getReference().child("users").child(targetUserID)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()){
-                    final String username = snapshot.child("username").getValue().toString();
-                    final String profileImgUri = snapshot.child("profileImgUri").getValue().toString();
-                    final String email = snapshot.child("email").getValue().toString();
+                    String username = snapshot.child("username").getValue().toString();
+                    String profileImgUri = snapshot.child("profileImgUri").getValue().toString();
+                    String email = snapshot.child("email").getValue().toString();
 
                     Picasso.get().load(profileImgUri).into(civPopOutProfileImg);
                     tvPopOutUsername.setText(username);
@@ -124,10 +124,11 @@ public class FriendListAdapter extends FirebaseRecyclerAdapter<Friend, FriendLis
                 builder.setTitle("Confirm to unfriend this user?");
                 builder.setMessage("User would not exist in friend list anymore.");
 
-                builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         UnFriendExistingUser(v);
+                        userDialog.dismiss();
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -164,6 +165,7 @@ public class FriendListAdapter extends FirebaseRecyclerAdapter<Friend, FriendLis
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()){
+                                                FriendListAdapter.this.notifyDataSetChanged();
                                                 Toast.makeText(v.getContext(), "Successfully removed user from friend list",Toast.LENGTH_SHORT).show();
                                             }
                                         }

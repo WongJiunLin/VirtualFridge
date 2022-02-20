@@ -74,7 +74,9 @@ public class AddFridgeActivity extends AppCompatActivity {
         HashMap fridgeMap = new HashMap();
         fridgeMap.put("fridgeName",fridgeName);
         fridgeMap.put("fridgeCreatedDate",fridgeCreatedDate);
+        fridgeMap.put("createdBy",currentUserId);
 
+        fridgeRef.child(fridgeName+fridgeCreatedDate+fridgeCreatedTime).child("participants").child(currentUserId).child("role").setValue("host");
         fridgeRef.child(fridgeName+fridgeCreatedDate+fridgeCreatedTime).updateChildren(fridgeMap).addOnSuccessListener(new OnSuccessListener() {
             @Override
             public void onSuccess(Object o) {

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cvFriendRequest"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="25dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/add_profile_img_icon"
+            android:id="@+id/cardCIvFriendRequestProfileImg" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/cardTvFriendRequestUsername"
+            android:text="Username"
+            android:textStyle="bold"
+            android:textSize="25sp"
+            android:textColor="@color/black"
+            android:layout_toRightOf="@+id/cardCIvFriendRequestProfileImg"
+            android:layout_marginLeft="10dp"/>
+
+        <ImageButton
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/imgBtnAcceptFriend"
+            android:layout_toRightOf="@id/cardCIvFriendRequestProfileImg"
+            android:layout_below="@id/cardTvFriendRequestUsername"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/icon_accept"/>
+
+        <ImageButton
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/imgBtnRejectFriend"
+            android:layout_toRightOf="@id/imgBtnAcceptFriend"
+            android:layout_below="@id/cardTvFriendRequestUsername"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/icon_reject"/>
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

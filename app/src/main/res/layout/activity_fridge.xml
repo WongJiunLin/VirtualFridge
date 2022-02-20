@@ -11,20 +11,40 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <TextView
-            android:id="@+id/tvFridgeNameBanner"
+        <LinearLayout
+            android:id="@+id/llTopBanner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:text="Fridge Name"
-            android:drawableLeft="@drawable/icon_back_arrow"
-            android:textColor="@color/black"
-            android:fontFamily="sans-serif-black"
-            android:textSize="30sp"
-            android:textAlignment="center"
-            android:background="@drawable/banner_bg"
-            android:layout_margin="10dp"
-            android:padding="10dp" />
+            android:orientation="horizontal">
+            <ImageButton
+                android:id="@+id/imgBtnBack"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/icon_back_arrow"/>
+            <TextView
+                android:id="@+id/tvFridgeNameBanner"
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="Fridge Name"
+                android:textColor="@color/black"
+                android:fontFamily="sans-serif-black"
+                android:textSize="30sp"
+                android:textAlignment="center"
+                android:background="@drawable/banner_bg"
+                android:layout_margin="10dp"
+                android:layout_marginTop="20dp"
+                android:padding="10dp" />
+            <ImageButton
+                android:id="@+id/imgBtnAddParticipants"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/icon_friend_request"/>
+        </LinearLayout>
 
         <Button
             android:id="@+id/btnCheckExpiredItems"
@@ -34,7 +54,7 @@
             android:textColor="@color/white"
             android:textSize="20sp"
             android:padding="10dp"
-            android:layout_below="@+id/tvFridgeNameBanner"
+            android:layout_below="@+id/llTopBanner"
             android:backgroundTint="@color/black"
             android:layout_marginTop="10dp"
             android:layout_centerHorizontal="true"/>
