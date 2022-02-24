@@ -79,11 +79,15 @@ public class HomeActivity extends AppCompatActivity {
                 List<String> expiredItemCounts = new ArrayList<String>();
                 for(DataSnapshot fridge: snapshot.getChildren()){
                     String fridgeName = fridge.child("fridgeName").getValue().toString();
-                    String expiredItemCount = String.valueOf(fridge.child("expiredItems").getChildrenCount());
-                    fridges.add(fridgeName);
-                    expiredItemCounts.add(expiredItemCount);
+                    long expiredItemCount = fridge.child("expiredItems").getChildrenCount();
+                    if (expiredItemCount>0){
+                        fridges.add(fridgeName);
+                        expiredItemCounts.add(String.valueOf(expiredItemCount));
+                    }
                 }
-                sendNotification(fridges, expiredItemCounts);
+                if (!expiredItemCounts.isEmpty()){
+                    sendNotification(fridges, expiredItemCounts);
+                }
             }
 
             @Override

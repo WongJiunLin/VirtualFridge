@@ -46,17 +46,18 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myViewHolder> {
 
-    private String fridgeKey, containerType;
+    private String fridgeKey, containerType, createdBy;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private String currentUserId = mAuth.getUid();
 
     private String itemExpirationDate;
     private int colorAlert, colorModerate, colorSafe;
 
-    public ItemAdapter(String fridgeKey, String containerType, @NonNull FirebaseRecyclerOptions<Item> options) {
+    public ItemAdapter(String fridgeKey, String containerType, String createdBy, @NonNull FirebaseRecyclerOptions<Item> options) {
         super(options);
         this.fridgeKey = fridgeKey;
         this.containerType = containerType;
+        this.createdBy = createdBy;
     }
 
     @Override
@@ -71,7 +72,7 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
         colorSafe = holder.cvItem.getResources().getColor(R.color.safeExpired);
 
         FirebaseDatabase.getInstance().getReference()
-                .child("users").child(currentUserId).child("fridges").child(fridgeKey).child(containerType)
+                .child("users").child(createdBy).child("fridges").child(fridgeKey).child(containerType)
                 .child("items").child(currentItemId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -121,9 +122,17 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
                     expiredItemMap.put("containerType",containerType);
                     expiredItemMap.put("days",days);
                     FirebaseDatabase.getInstance().getReference()
-                            .child("users").child(currentUserId).child("fridges").child(fridgeKey)
+                            .child("users").child(createdBy).child("fridges").child(fridgeKey)
                             .child("expiredItems").child(getRef(position).getKey()).updateChildren(expiredItemMap);
 
+                }else if (days <= 3 && days >= 1){
+                    HashMap merelyExpiredItemMap = new HashMap();
+                    merelyExpiredItemMap.put("itemName", itemName);
+                    merelyExpiredItemMap.put("itemImgUri",itemImgUri);
+                    merelyExpiredItemMap.put("days", days);
+                    FirebaseDatabase.getInstance().getReference()
+                            .child("users").child(createdBy).child("fridges").child(fridgeKey)
+                            .child("merelyExpiredItems").child(getRef(position).getKey()).updateChildren(merelyExpiredItemMap);
                 }
 
             }
@@ -148,6 +157,7 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
                 Intent intent = new Intent(v.getContext(), EditItemActivity.class);
                 intent.putExtra("fridgeKey", fridgeKey);
                 intent.putExtra("containerType", containerType);
+                intent.putExtra("createdBy", createdBy);
                 intent.putExtra("curItemId", curItemId);
                 v.getContext().startActivity(intent);
             }
@@ -166,12 +176,17 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
                     public void onClick(DialogInterface dialog, int which) {
                         // remove item in respective fridge
                         FirebaseDatabase.getInstance().getReference()
-                                .child("users").child(currentUserId).child("fridges").child(fridgeKey).child(containerType)
+                                .child("users").child(createdBy).child("fridges").child(fridgeKey).child(containerType)
                                 .child("items").child(getRef(position).getKey()).removeValue();
 
                         //remove respective item in expired item list
                         FirebaseDatabase.getInstance().getReference()
-                                .child("users").child(currentUserId).child("fridges").child(fridgeKey).child("expiredItems")
+                                .child("users").child(createdBy).child("fridges").child(fridgeKey).child("expiredItems")
+                                .child(getRef(position).getKey()).removeValue();
+
+                        //remove respective item in merely expired item list
+                        FirebaseDatabase.getInstance().getReference()
+                                .child("users").child(createdBy).child("fridges").child(fridgeKey).child("merelyExpiredItems")
                                 .child(getRef(position).getKey()).removeValue();
 
                     }

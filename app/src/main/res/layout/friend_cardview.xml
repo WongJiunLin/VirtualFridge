@@ -19,7 +19,7 @@
             android:id="@+id/cardCIvUserProfileImg" />
 
         <TextView
-            android:layout_width="200dp"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:id="@+id/cardTvUsername"
             android:text="Username"
@@ -42,16 +42,25 @@
             android:layout_marginLeft="10dp"/>
 
         <Button
-            android:id="@+id/tvAddParticipant"
+            android:id="@+id/btnAddParticipant"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/cardTvUsername"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="10dp"
+            android:layout_margin="10dp"
             android:text="Add"
             android:backgroundTint="@color/requestFriend"
             android:visibility="invisible"
             android:enabled="false"/>
+        <TextView
+            android:id="@+id/tvParticipantExisted"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="existed"
+            android:layout_toRightOf="@id/cardTvUsername"
+            android:textSize="15sp"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="10dp"
+            android:visibility="invisible"/>
 
 
     </RelativeLayout>

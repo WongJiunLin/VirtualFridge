@@ -95,9 +95,10 @@ public class EditItemActivity extends AppCompatActivity implements DatePickerDia
         intentFromItemAdapter = getIntent();
         String fridgeKey = intentFromItemAdapter.getStringExtra("fridgeKey");
         String containerType = intentFromItemAdapter.getStringExtra("containerType");
+        String createdBy = intentFromItemAdapter.getStringExtra("createdBy");
         String curItemId = intentFromItemAdapter.getStringExtra("curItemId");
 
-        itemRef = FirebaseDatabase.getInstance().getReference().child("users").child(currentUserId)
+        itemRef = FirebaseDatabase.getInstance().getReference().child("users").child(createdBy)
                         .child("fridges").child(fridgeKey).child(containerType).child("items").child(curItemId);
 
         itemShelfLifeRef = FirebaseDatabase.getInstance().getReference().child("shelf-life");

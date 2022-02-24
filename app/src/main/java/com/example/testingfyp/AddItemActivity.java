@@ -79,7 +79,7 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
     private Intent intentFromFridgeActivity;
     private Date storedDate, expirationDate;
     private String itemName, itemType, itemCategory, itemStoredDate, itemExpirationDate, itemExpiryDate;
-    private String fridgeKey, containerType, itemTypeHint, itemCategoryHint, itemShelfLifeHint;
+    private String fridgeKey, containerType, itemTypeHint, itemCategoryHint, itemShelfLifeHint, createdBy;
 
     private Calendar calForStoredDate, calForExpiryDate;
 
@@ -96,14 +96,15 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
         intentFromFridgeActivity = getIntent();
         fridgeKey = intentFromFridgeActivity.getStringExtra("fridgeKey");
         containerType = intentFromFridgeActivity.getStringExtra("containerType");
+        createdBy = intentFromFridgeActivity.getStringExtra("createdBy");
 
         mAuth = FirebaseAuth.getInstance();
         currentUserId = mAuth.getUid();
 
         pbAddItem = (ProgressBar) findViewById(R.id.pbAddItem);
 
-        itemImageRef = FirebaseStorage.getInstance().getReference().child("users").child(currentUserId).child("fridges").child(fridgeKey).child("item images");
-        itemRef = FirebaseDatabase.getInstance().getReference().child("users").child(currentUserId)
+        itemImageRef = FirebaseStorage.getInstance().getReference().child("users").child(createdBy).child("fridges").child(fridgeKey).child("item images");
+        itemRef = FirebaseDatabase.getInstance().getReference().child("users").child(createdBy)
                 .child("fridges").child(fridgeKey).child(containerType).child("items");
         itemShelfLifeRef = FirebaseDatabase.getInstance().getReference().child("shelf-life");
 
