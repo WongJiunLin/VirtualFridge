@@ -31,6 +31,7 @@ public class ExpiredItemsActivity extends AppCompatActivity {
 
         intentFromFridgeActivity = getIntent();
         String fridgeKey = intentFromFridgeActivity.getStringExtra("fridgeKey");
+        String createdBy = intentFromFridgeActivity.getStringExtra("createdBy");
 
         mAuth = FirebaseAuth.getInstance();
         currentUserId = mAuth.getUid();
@@ -41,9 +42,9 @@ public class ExpiredItemsActivity extends AppCompatActivity {
         // set up the recycler options for the expired items list
         FirebaseRecyclerOptions<Item> options =
                 new FirebaseRecyclerOptions.Builder<Item>()
-                        .setQuery(FirebaseDatabase.getInstance().getReference().child("users").child(currentUserId)
+                        .setQuery(FirebaseDatabase.getInstance().getReference().child("users").child(createdBy)
                                 .child("fridges").child(fridgeKey).child("expiredItems").orderByChild("days"),Item.class).build();
-        expiredItemAdapter = new ExpiredItemsAdapter(fridgeKey,options);
+        expiredItemAdapter = new ExpiredItemsAdapter(fridgeKey,createdBy, options);
         rvExpiredItems.setAdapter(expiredItemAdapter);
 
         tvAllExpiredItemsBanner = (TextView) findViewById(R.id.tvAllExpiredItemsBanner);

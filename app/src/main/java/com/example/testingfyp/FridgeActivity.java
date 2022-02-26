@@ -5,7 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -27,9 +30,10 @@ public class FridgeActivity extends AppCompatActivity {
 
     private TextView tvFridgeNameBanner;
 
-    private RecyclerView rvFreezer, rvShelf, rvDrawer;
-    private ImageButton btnFreezerAdd, btnShelfAdd, btnDrawerAdd, imgBtnBack, imgBtnAddParticipants;
+    private RecyclerView rvFreezer, rvShelf, rvDrawer, rvMerelyExpiredItems;
+    private ImageButton btnFreezerAdd, btnShelfAdd, btnDrawerAdd, imgBtnBack, imgBtnAddParticipants, imgBtnClosePopout;
     private ItemAdapter itemAdapterForFreezer, itemAdapterForShelf, itemAdapterForDrawer;
+    private MerelyExpiredItemsAdapter merelyExpiredItemsAdapter;
 
     private Button  btnCheckExpiredItems;
 
@@ -63,6 +67,22 @@ public class FridgeActivity extends AppCompatActivity {
         String createdBy = intentFromFridgeAdapter.getStringExtra("createdBy");
         tvFridgeNameBanner = findViewById(R.id.tvFridgeNameBanner);
         tvFridgeNameBanner.setText(fridgeName);
+
+        // show all the merely expired items info if existed
+        FirebaseDatabase.getInstance().getReference().child("users").child(createdBy)
+                .child("fridges").child(fridgeKey).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.hasChild("merelyExpiredItems")){
+                    showMerelyExpiredItemsPopOut(fridgeKey, createdBy);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull  DatabaseError error) {
+
+            }
+        });
 
         imgBtnBack = findViewById(R.id.imgBtnBack);
 
@@ -157,6 +177,34 @@ public class FridgeActivity extends AppCompatActivity {
                 startActivity(intentToExpiredItems);
             }
         });
+
+    }
+
+    private void showMerelyExpiredItemsPopOut(String fridgeKey, String createdBy) {
+        Dialog merelyExpiredItemsDialog = new Dialog(this);
+        merelyExpiredItemsDialog.setContentView(R.layout.merelyexpiredpopout);
+
+        imgBtnClosePopout = merelyExpiredItemsDialog.findViewById(R.id.imgBtnClosePopout);
+        rvMerelyExpiredItems = merelyExpiredItemsDialog.findViewById(R.id.rvMerelyExpiredItems);
+
+        rvMerelyExpiredItems.setLayoutManager(new LinearLayoutManager(this));
+
+        FirebaseRecyclerOptions<Item> options = new FirebaseRecyclerOptions.Builder<Item>()
+                .setQuery(FirebaseDatabase.getInstance().getReference().child("users").child(createdBy)
+                        .child("fridges").child(fridgeKey).child("merelyExpiredItems"), Item.class).build();
+        merelyExpiredItemsAdapter = new MerelyExpiredItemsAdapter(options);
+        merelyExpiredItemsAdapter.startListening();
+        rvMerelyExpiredItems.setAdapter(merelyExpiredItemsAdapter);
+
+        imgBtnClosePopout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                merelyExpiredItemsDialog.dismiss();
+            }
+        });
+
+        merelyExpiredItemsDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        merelyExpiredItemsDialog.show();
 
     }
 

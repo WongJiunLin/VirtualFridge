@@ -2,6 +2,7 @@ package com.example.testingfyp;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,16 +27,17 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ExpiredItemsAdapter extends FirebaseRecyclerAdapter<Item, ExpiredItemsAdapter.myViewHolder> {
 
-    private String fridgeKey, containerType;
+    private String fridgeKey, createdBy, containerType;
 
     private FirebaseAuth mAuth;
     private String currentUserId;
 
     private int colorAlert;
 
-    public ExpiredItemsAdapter(String fridgeKey, @NonNull FirebaseRecyclerOptions<Item> options) {
+    public ExpiredItemsAdapter(String fridgeKey, String createdBy, @NonNull FirebaseRecyclerOptions<Item> options) {
         super(options);
         this.fridgeKey = fridgeKey;
+        this.createdBy = createdBy;
     }
 
     @Override
@@ -56,7 +58,7 @@ public class ExpiredItemsAdapter extends FirebaseRecyclerAdapter<Item, ExpiredIt
 
         // get the item container type
 
-        FirebaseDatabase.getInstance().getReference().child("users").child(currentUserId).child("fridges").child(fridgeKey)
+        FirebaseDatabase.getInstance().getReference().child("users").child(createdBy).child("fridges").child(fridgeKey)
                 .child("expiredItems").child(getRef(position).getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -70,6 +72,20 @@ public class ExpiredItemsAdapter extends FirebaseRecyclerAdapter<Item, ExpiredIt
         });
 
         // click edit button to update item info
+        // click edit button to proceed to edit item activity
+        holder.btnEditItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String curItemId = getRef(position).getKey();
+                Intent intent = new Intent(v.getContext(), EditItemActivity.class);
+                intent.putExtra("fridgeKey", fridgeKey);
+                intent.putExtra("containerType", containerType);
+                intent.putExtra("createdBy", createdBy);
+                intent.putExtra("curItemId", curItemId);
+                v.getContext().startActivity(intent);
+            }
+        });
+
         // click delete button to remove item
         holder.btnDeleteItem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,11 +99,11 @@ public class ExpiredItemsAdapter extends FirebaseRecyclerAdapter<Item, ExpiredIt
                     public void onClick(DialogInterface dialog, int which) {
                         // remove item in expired item list
                         FirebaseDatabase.getInstance().getReference()
-                                .child("users").child(currentUserId).child("fridges").child(fridgeKey)
+                                .child("users").child(createdBy).child("fridges").child(fridgeKey)
                                 .child("expiredItems").child(getRef(position).getKey()).removeValue();
                         // remove item in fridge container
                         FirebaseDatabase.getInstance().getReference()
-                                .child("users").child(currentUserId).child("fridges").child(fridgeKey)
+                                .child("users").child(createdBy).child("fridges").child(fridgeKey)
                                 .child(containerType).child("items").child(getRef(position).getKey()).removeValue();
                     }
                 });
