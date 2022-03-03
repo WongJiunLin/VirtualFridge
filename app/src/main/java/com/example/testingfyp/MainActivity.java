@@ -19,6 +19,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.w3c.dom.Text;
 
@@ -31,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar pbLogin;
 
     private FirebaseAuth mAuth;
+
+    private String currentUID, tokenID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +87,18 @@ public class MainActivity extends AppCompatActivity {
                 if (task.isSuccessful()){
                     tvAlertLoginError.setVisibility(View.INVISIBLE);
                     pbLogin.setVisibility(View.INVISIBLE);
+                    // if successfully login, obtain and update the user device token id
+                    currentUID = mAuth.getUid();
+                    FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+                        @Override
+                        public void onComplete(@NonNull Task<String> task) {
+                            if (task.isSuccessful()){
+                                tokenID = task.getResult();
+                                FirebaseDatabase.getInstance().getReference().child("users").child(currentUID)
+                                        .child("tokenID").setValue(tokenID);
+                            }
+                        }
+                    });
                     startActivity(new Intent(MainActivity.this, HomeActivity.class));
                     Toast.makeText(MainActivity.this, "Login Successfully", Toast.LENGTH_SHORT).show();
 

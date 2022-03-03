@@ -64,7 +64,7 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
     protected void onBindViewHolder(@NonNull ItemAdapter.myViewHolder holder, int position, @NonNull Item model) {
 
         // current Item
-        String currentItemId = getRef(position).getKey();
+        String currentItemId = getRef(holder.getAdapterPosition()).getKey();
 
         // obtain color code
         colorAlert = holder.cvItem.getResources().getColor(R.color.nearlyExpired);
@@ -79,6 +79,7 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
 
                 // get the item info
                 String itemName = snapshot.child("itemName").getValue().toString();
+                String placedBy = snapshot.child("placedBy").getValue().toString();
                 String itemStoredDate = snapshot.child("itemStoredDate").getValue().toString();
                 String itemImgUri = snapshot.child("itemImgUri").getValue().toString();
 
@@ -98,7 +99,7 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
                 daysBetweenMap.put("days",daysBetween);
                 FirebaseDatabase.getInstance().getReference()
                         .child("users").child(currentUserId).child("fridges").child(fridgeKey).child(containerType)
-                        .child("items").child(getRef(position).getKey()).updateChildren(daysBetweenMap);
+                        .child("items").child(getRef(holder.getAdapterPosition()).getKey()).updateChildren(daysBetweenMap);
 
                 int days = Integer.parseInt(snapshot.child("days").getValue().toString());
                 if (days<=1){
@@ -116,6 +117,7 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
 
                     HashMap expiredItemMap = new HashMap();
                     expiredItemMap.put("itemName",itemName);
+                    expiredItemMap.put("placedBy", placedBy);
                     expiredItemMap.put("itemExpirationDate",itemExpirationDate);
                     expiredItemMap.put("itemStoredDate",itemStoredDate);
                     expiredItemMap.put("itemImgUri",itemImgUri);
@@ -123,7 +125,7 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
                     expiredItemMap.put("days",days);
                     FirebaseDatabase.getInstance().getReference()
                             .child("users").child(createdBy).child("fridges").child(fridgeKey)
-                            .child("expiredItems").child(getRef(position).getKey()).updateChildren(expiredItemMap);
+                            .child("expiredItems").child(getRef(holder.getAdapterPosition()).getKey()).updateChildren(expiredItemMap);
 
                 }else if (days <= 3 && days >= 1){
                     HashMap merelyExpiredItemMap = new HashMap();
@@ -132,7 +134,7 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
                     merelyExpiredItemMap.put("days", days);
                     FirebaseDatabase.getInstance().getReference()
                             .child("users").child(createdBy).child("fridges").child(fridgeKey)
-                            .child("merelyExpiredItems").child(getRef(position).getKey()).updateChildren(merelyExpiredItemMap);
+                            .child("merelyExpiredItems").child(getRef(holder.getAdapterPosition()).getKey()).updateChildren(merelyExpiredItemMap);
                 }
 
             }
@@ -145,6 +147,7 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
 
         // display data in the item card view
         holder.cardTvItemName.setText(model.getItemName());
+        holder.cardTvPlacedBy.setText(model.getPlacedBy());
         holder.cardTvExpirationDate.setText(model.getItemExpirationDate());
         holder.cardTvItemAvailableDay.setText(String.valueOf(model.getDays()));
         Picasso.get().load(model.getItemImgUri()).into(holder.cIvItemImg);
@@ -153,7 +156,7 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
         holder.btnEditItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String curItemId = getRef(position).getKey();
+                String curItemId = getRef(holder.getAdapterPosition()).getKey();
                 Intent intent = new Intent(v.getContext(), EditItemActivity.class);
                 intent.putExtra("fridgeKey", fridgeKey);
                 intent.putExtra("containerType", containerType);
@@ -177,17 +180,17 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
                         // remove item in respective fridge
                         FirebaseDatabase.getInstance().getReference()
                                 .child("users").child(createdBy).child("fridges").child(fridgeKey).child(containerType)
-                                .child("items").child(getRef(position).getKey()).removeValue();
+                                .child("items").child(getRef(holder.getAdapterPosition()).getKey()).removeValue();
 
                         //remove respective item in expired item list
                         FirebaseDatabase.getInstance().getReference()
                                 .child("users").child(createdBy).child("fridges").child(fridgeKey).child("expiredItems")
-                                .child(getRef(position).getKey()).removeValue();
+                                .child(getRef(holder.getAdapterPosition()).getKey()).removeValue();
 
                         //remove respective item in merely expired item list
                         FirebaseDatabase.getInstance().getReference()
                                 .child("users").child(createdBy).child("fridges").child(fridgeKey).child("merelyExpiredItems")
-                                .child(getRef(position).getKey()).removeValue();
+                                .child(getRef(holder.getAdapterPosition()).getKey()).removeValue();
 
                     }
                 });
@@ -215,7 +218,7 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
 
         private CardView cvItem;
         private CircleImageView cIvItemImg;
-        private TextView cardTvItemName, cardTvExpirationDate, cardTvItemAvailableDay;
+        private TextView cardTvItemName, cardTvPlacedBy, cardTvExpirationDate, cardTvItemAvailableDay;
         private Button btnEditItem, btnDeleteItem;
 
         public myViewHolder(@NonNull View itemView) {
@@ -225,6 +228,7 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
 
             cIvItemImg =(CircleImageView) itemView.findViewById(R.id.cardCIvItemImage);
             cardTvItemName = (TextView) itemView.findViewById(R.id.cardTvItemName);
+            cardTvPlacedBy = (TextView) itemView.findViewById(R.id.cardTvPlacedBy);
             cardTvExpirationDate = (TextView) itemView.findViewById(R.id.cardTvExpirationDate);
 
             btnEditItem = (Button) itemView.findViewById(R.id.btnEditItem);

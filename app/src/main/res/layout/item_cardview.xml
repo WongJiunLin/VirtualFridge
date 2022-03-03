@@ -15,32 +15,55 @@
         android:padding="15dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/cardCIvItemImage"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:src="@mipmap/ic_launcher"
-            android:id="@+id/cardCIvItemImage" />
+            android:layout_marginTop="20dp"
+            android:src="@mipmap/ic_launcher" />
 
         <TextView
+            android:id="@+id/cardTvItemNameBanner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/cardTvItemNameBanner"
-            android:text="Name:"
-            android:textStyle="bold"
-            android:textSize="25sp"
-            android:textColor="@color/black"
+            android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/cardCIvItemImage"
-            android:layout_marginLeft="10dp"/>
+            android:text="Name:"
+            android:textColor="@color/black"
+            android:textSize="25sp"
+            android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/cardTvItemName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/cardTvItemName"
-            android:text="Item"
-            android:textStyle="bold"
-            android:textSize="25sp"
-            android:textColor="@color/black"
+            android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/cardTvItemNameBanner"
-            android:layout_marginLeft="10dp"/>
+            android:text="Item"
+            android:textColor="@color/black"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/cardTvPlacedByBanner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/cardCIvItemImage"
+            android:text="Placed by:"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:layout_below="@id/cardTvItemName"/>
+
+        <TextView
+            android:id="@+id/cardTvPlacedBy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/cardTvItemName"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/cardTvPlacedByBanner"
+            android:text="username"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -50,7 +73,7 @@
             android:textSize="20sp"
             android:textColor="@color/black"
             android:layout_toRightOf="@+id/cardCIvItemImage"
-            android:layout_below="@+id/cardTvItemName"
+            android:layout_below="@+id/cardTvPlacedByBanner"
             android:layout_marginLeft="10dp"/>
 
         <TextView
@@ -61,7 +84,7 @@
             android:textSize="20sp"
             android:textColor="@color/black"
             android:layout_toRightOf="@+id/cardTvExpirationBanner"
-            android:layout_below="@+id/cardTvItemName"
+            android:layout_below="@+id/cardTvPlacedBy"
             android:layout_marginLeft="10dp"/>
 
         <TextView
@@ -90,7 +113,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
             android:layout_below="@+id/cardCIvItemImage">
 
             <Button

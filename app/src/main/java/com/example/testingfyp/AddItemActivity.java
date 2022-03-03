@@ -74,7 +74,7 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
     private StorageReference itemImageRef;
     private DatabaseReference itemRef, itemShelfLifeRef;
     private FirebaseAuth mAuth;
-    private String currentUserId, saveCurrentDate, saveCurrentTime, imgRandomName, downloadUri;
+    private String currentUserId, currentUsername, saveCurrentDate, saveCurrentTime, imgRandomName, downloadUri;
 
     private Intent intentFromFridgeActivity;
     private Date storedDate, expirationDate;
@@ -100,6 +100,20 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
 
         mAuth = FirebaseAuth.getInstance();
         currentUserId = mAuth.getUid();
+
+        FirebaseDatabase.getInstance().getReference().child("users").child(currentUserId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    currentUsername = snapshot.child("username").getValue().toString();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         pbAddItem = (ProgressBar) findViewById(R.id.pbAddItem);
 
@@ -426,6 +440,7 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
         itemMap.put("itemCategory",itemCategory);
         itemMap.put("itemStoredDate",itemStoredDate);
         itemMap.put("itemExpirationDate", itemExpirationDate);
+        itemMap.put("placedBy", currentUsername);
         itemMap.put("itemImgUri",downloadUri);
         itemMap.put("days",days);
 

@@ -30,7 +30,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class FriendRequestAdapter extends FirebaseRecyclerAdapter<FriendRequest, FriendRequestAdapter.myViewHolder> {
 
     private DatabaseReference userRef, friendRequestRef, friendsRef;
-    private String currentUID, targetUserID, saveCurrentDate;
+    private String currentUID, targetUserID, currentUsername, targetTokenID, saveCurrentDate;
 
     public FriendRequestAdapter(@NonNull FirebaseRecyclerOptions<FriendRequest> options) {
         super(options);
@@ -38,7 +38,7 @@ public class FriendRequestAdapter extends FirebaseRecyclerAdapter<FriendRequest,
 
     @Override
     protected void onBindViewHolder(@NonNull FriendRequestAdapter.myViewHolder holder, int position, @NonNull FriendRequest model) {
-        targetUserID = getRef(position).getKey();
+        targetUserID = getRef(holder.getAdapterPosition()).getKey();
         currentUID = FirebaseAuth.getInstance().getUid();
 
         friendRequestRef = FirebaseDatabase.getInstance().getReference().child("friend requests");
@@ -63,6 +63,36 @@ public class FriendRequestAdapter extends FirebaseRecyclerAdapter<FriendRequest,
             }
         });
 
+        // obtain the target device tokenID
+        FirebaseDatabase.getInstance().getReference().child("users").child(targetUserID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.hasChild("tokenID")){
+                    targetTokenID = snapshot.child("tokenID").getValue().toString();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        // obtain current username
+        FirebaseDatabase.getInstance().getReference().child("users").child(currentUID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.hasChild("username")){
+                    currentUsername = snapshot.child("username").getValue().toString();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         holder.imgBtnAcceptFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,17 +100,19 @@ public class FriendRequestAdapter extends FirebaseRecyclerAdapter<FriendRequest,
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
                 saveCurrentDate = dateFormat.format(calForDate.getTime());
 
-                friendsRef.child(currentUID).child(getRef(position).getKey()).child("date").setValue(saveCurrentDate)
+                friendsRef.child(currentUID).child(getRef(holder.getAdapterPosition()).getKey()).child("date").setValue(saveCurrentDate)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()){
-                                    friendsRef.child(getRef(position).getKey()).child(currentUID).child("date").setValue(saveCurrentDate)
+                                    friendsRef.child(getRef(holder.getAdapterPosition()).getKey()).child(currentUID).child("date").setValue(saveCurrentDate)
                                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {
                                                     if (task.isSuccessful()){
-                                                        CancelFriendRequest(position);
+                                                        CancelFriendRequest(holder.getAdapterPosition());
+                                                        // send notification to target user device
+                                                        sendNotification("acceptFriendRequest", v);
                                                     }
                                                 }
                                             });
@@ -94,7 +126,7 @@ public class FriendRequestAdapter extends FirebaseRecyclerAdapter<FriendRequest,
         holder.imgBtnRejectFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String userID = getRef(position).getKey();
+                String userID = getRef(holder.getAdapterPosition()).getKey();
                 friendRequestRef.child(currentUID).child(userID).removeValue()
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
@@ -106,6 +138,8 @@ public class FriendRequestAdapter extends FirebaseRecyclerAdapter<FriendRequest,
                                                 public void onComplete(@NonNull Task<Void> task) {
                                                     if (task.isSuccessful()){
                                                         FriendRequestAdapter.this.notifyDataSetChanged();
+                                                        // send notification to target user device
+                                                        sendNotification("declineFriendRequest", v);
                                                     }
                                                 }
                                             });
@@ -116,8 +150,21 @@ public class FriendRequestAdapter extends FirebaseRecyclerAdapter<FriendRequest,
         });
     }
 
-    private void CancelFriendRequest(int position) {
-        String userID = getRef(position).getKey();
+    private void sendNotification(String notificationType, View v) {
+        if (notificationType.equals("acceptFriendRequest")){
+            String title = "Friend Request Accepted";
+            String message = currentUsername + " has accepted your friend request";
+            FCMSend.pushNotification(v.getContext(), targetTokenID, title, message);
+        }
+        if (notificationType.equals("declineFriendRequest")){
+            String title = "Friend Request Rejected";
+            String message = currentUsername + " has declined your friend request";
+            FCMSend.pushNotification(v.getContext(), targetTokenID, title, message);
+        }
+    }
+
+    private void CancelFriendRequest(int adapterPosition) {
+        String userID = getRef(adapterPosition).getKey();
         friendRequestRef.child(currentUID).child(userID).removeValue()
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override

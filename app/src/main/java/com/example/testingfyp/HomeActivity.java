@@ -135,7 +135,7 @@ public class HomeActivity extends AppCompatActivity {
                     break;
                 case R.id.shoppinglist:
                     item.setChecked(true);
-                    startActivity(new Intent(HomeActivity.this, HomeActivity.class));
+                    startActivity(new Intent(HomeActivity.this, MessageTesting.class));
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     finish();
                     break;

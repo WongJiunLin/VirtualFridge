@@ -11,7 +11,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TestingFYP">
-        <activity android:name=".AddParticipantsActivity"></activity>
+        <activity
+            android:name=".MessageTesting"
+            android:exported="false" />
+        <activity android:name=".AddParticipantsActivity" />
         <activity android:name=".FriendRequestActivity" />
         <activity android:name=".SearchFriendActivity" />
         <activity android:name=".FriendListActivity" />
@@ -32,6 +35,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service
+            android:name=".PushNotificationService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

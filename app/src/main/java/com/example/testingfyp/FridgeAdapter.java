@@ -29,6 +29,8 @@ public class FridgeAdapter extends FirebaseRecyclerAdapter<Fridge, FridgeAdapter
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private String currentUserId = mAuth.getUid();
 
+    private String currentUsername, targetTokenID;
+
     public FridgeAdapter(@NonNull FirebaseRecyclerOptions<Fridge> options) {
         super(options);
     }
@@ -46,7 +48,7 @@ public class FridgeAdapter extends FirebaseRecyclerAdapter<Fridge, FridgeAdapter
         holder.btnEnterFridge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String fridgeKey = getRef(position).getKey();
+                String fridgeKey = getRef(holder.getAdapterPosition()).getKey();
                 Intent intent = new Intent(v.getContext(),FridgeActivity.class);
                 intent.putExtra("fridgeName",fridgeName);
                 intent.putExtra("fridgeKey",fridgeKey);
@@ -70,14 +72,14 @@ public class FridgeAdapter extends FirebaseRecyclerAdapter<Fridge, FridgeAdapter
                         if (createdBy.equals(currentUserId)){
                             // remove related fridge from other participants
                             FirebaseDatabase.getInstance().getReference().child("users").child(currentUserId)
-                                    .child("fridges").child(getRef(position).getKey()).child("participants").addListenerForSingleValueEvent(new ValueEventListener() {
+                                    .child("fridges").child(getRef(holder.getAdapterPosition()).getKey()).child("participants").addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     if (snapshot.exists()){
                                         for (DataSnapshot ds : snapshot.getChildren()){
                                             String participantId = ds.getKey();
                                             FirebaseDatabase.getInstance().getReference().child("users").child(participantId)
-                                                    .child("fridges").child(getRef(position).getKey()).removeValue();
+                                                    .child("fridges").child(getRef(holder.getAdapterPosition()).getKey()).removeValue();
                                         }
                                     }
                                 }
@@ -89,19 +91,49 @@ public class FridgeAdapter extends FirebaseRecyclerAdapter<Fridge, FridgeAdapter
                             });
                             // remove fridge from host
                             FirebaseDatabase.getInstance().getReference().child("users").child(currentUserId)
-                                    .child("fridges").child(getRef(position).getKey()).removeValue();
+                                    .child("fridges").child(getRef(holder.getAdapterPosition()).getKey()).removeValue();
                             Toast.makeText(v.getContext(), "Successfully deleted "+fridgeName, Toast.LENGTH_SHORT).show();
                             FridgeAdapter.this.notifyDataSetChanged();
                         } else {
                             // remove fridge from participants
                             FirebaseDatabase.getInstance().getReference().child("users").child(currentUserId)
-                                    .child("fridges").child(getRef(position).getKey()).removeValue();
+                                    .child("fridges").child(getRef(holder.getAdapterPosition()).getKey()).removeValue();
                             // remove the participants details from host.
                             FirebaseDatabase.getInstance().getReference().child("users").child(createdBy)
-                                    .child("fridges").child(getRef(position).getKey())
+                                    .child("fridges").child(getRef(holder.getAdapterPosition()).getKey())
                                     .child("participants").child(currentUserId).removeValue();
                             Toast.makeText(v.getContext(), "Successfully deleted "+fridgeName+" from your side", Toast.LENGTH_SHORT).show();
                             FridgeAdapter.this.notifyDataSetChanged();
+                            // notify the fridge host that current user had left the fridge
+                            // obtain the currentUsername
+                            FirebaseDatabase.getInstance().getReference().child("users").child(currentUserId).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot.hasChild("username")){
+                                        currentUsername = snapshot.child("username").getValue().toString();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+                            // obtain the host device token id
+                            FirebaseDatabase.getInstance().getReference().child("users").child(createdBy).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot.hasChild("tokenID")){
+                                        targetTokenID = snapshot.child("tokenID").getValue().toString();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+                            sendNotification("leaveFridge",fridgeName,v);
                         }
                     }
                 });
@@ -114,6 +146,14 @@ public class FridgeAdapter extends FirebaseRecyclerAdapter<Fridge, FridgeAdapter
                 builder.show();
             }
         });
+    }
+
+    private void sendNotification(String notificationType, String fridgeName, View v) {
+        if (notificationType.equals("leaveFridge")){
+            String title = "Participant quit the fridge";
+            String message = currentUsername + " had left " + fridgeName + " fridge";
+            FCMSend.pushNotification(v.getContext(), targetTokenID, title, message);
+        }
     }
 
     @NonNull

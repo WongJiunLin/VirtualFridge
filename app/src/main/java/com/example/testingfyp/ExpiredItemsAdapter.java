@@ -23,6 +23,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ExpiredItemsAdapter extends FirebaseRecyclerAdapter<Item, ExpiredItemsAdapter.myViewHolder> {
@@ -51,6 +53,7 @@ public class ExpiredItemsAdapter extends FirebaseRecyclerAdapter<Item, ExpiredIt
 
         // display data in the item card view
         holder.cardTvItemName.setText(model.getItemName());
+        holder.cardTvPlacedBy.setText(model.getPlacedBy());
         holder.cvItem.setCardBackgroundColor(colorAlert);
         holder.cardTvExpirationDate.setText(model.getItemExpirationDate());
         holder.cardTvItemAvailableDay.setText(String.valueOf(model.getDays()));
@@ -59,7 +62,7 @@ public class ExpiredItemsAdapter extends FirebaseRecyclerAdapter<Item, ExpiredIt
         // get the item container type
 
         FirebaseDatabase.getInstance().getReference().child("users").child(createdBy).child("fridges").child(fridgeKey)
-                .child("expiredItems").child(getRef(position).getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                .child("expiredItems").child(getRef(holder.getAdapterPosition()).getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 containerType = snapshot.child("containerType").getValue().toString();
@@ -76,7 +79,7 @@ public class ExpiredItemsAdapter extends FirebaseRecyclerAdapter<Item, ExpiredIt
         holder.btnEditItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String curItemId = getRef(position).getKey();
+                String curItemId = getRef(holder.getAdapterPosition()).getKey();
                 Intent intent = new Intent(v.getContext(), EditItemActivity.class);
                 intent.putExtra("fridgeKey", fridgeKey);
                 intent.putExtra("containerType", containerType);
@@ -100,11 +103,11 @@ public class ExpiredItemsAdapter extends FirebaseRecyclerAdapter<Item, ExpiredIt
                         // remove item in expired item list
                         FirebaseDatabase.getInstance().getReference()
                                 .child("users").child(createdBy).child("fridges").child(fridgeKey)
-                                .child("expiredItems").child(getRef(position).getKey()).removeValue();
+                                .child("expiredItems").child(getRef(holder.getAdapterPosition()).getKey()).removeValue();
                         // remove item in fridge container
                         FirebaseDatabase.getInstance().getReference()
                                 .child("users").child(createdBy).child("fridges").child(fridgeKey)
-                                .child(containerType).child("items").child(getRef(position).getKey()).removeValue();
+                                .child(containerType).child("items").child(getRef(holder.getAdapterPosition()).getKey()).removeValue();
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -129,7 +132,7 @@ public class ExpiredItemsAdapter extends FirebaseRecyclerAdapter<Item, ExpiredIt
 
         private CardView cvItem;
         private CircleImageView cIvItemImg;
-        private TextView cardTvItemName, cardTvExpirationDate, cardTvItemAvailableDay;
+        private TextView cardTvItemName, cardTvPlacedBy, cardTvExpirationDate, cardTvItemAvailableDay;
         private Button btnEditItem, btnDeleteItem;
 
         public myViewHolder(@NonNull View itemView) {
@@ -139,6 +142,7 @@ public class ExpiredItemsAdapter extends FirebaseRecyclerAdapter<Item, ExpiredIt
 
             cIvItemImg =(CircleImageView) itemView.findViewById(R.id.cardCIvItemImage);
             cardTvItemName = (TextView) itemView.findViewById(R.id.cardTvItemName);
+            cardTvPlacedBy = (TextView) itemView.findViewById(R.id.cardTvPlacedBy);
             cardTvExpirationDate = (TextView) itemView.findViewById(R.id.cardTvExpirationDate);
 
             btnEditItem = (Button) itemView.findViewById(R.id.btnEditItem);

@@ -96,7 +96,7 @@ public class ProfileActivity extends AppCompatActivity {
                     break;
                 case R.id.shoppinglist:
                     item.setChecked(true);
-                    startActivity(new Intent(ProfileActivity.this, HomeActivity.class));
+                    startActivity(new Intent(ProfileActivity.this, MessageTesting.class));
                     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                     finish();
                     break;
