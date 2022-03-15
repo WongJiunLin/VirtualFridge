@@ -1,8 +1,10 @@
 package com.example.testingfyp;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,6 +12,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -26,12 +30,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ProfileActivity extends AppCompatActivity {
 
     private CircleImageView civProfileImg;
-    private TextView tvProfileUsername, tvProfileEmail, btnLogout;
+    private TextView tvProfileUsername, tvProfileEmail, btnLogout, btnResetPassword;
 
     private FirebaseAuth mAuth;
     private DatabaseReference userProfileRef;
 
-    private String currentUserId;
+    private String currentUserId, username, email;
+    private Uri profileImgUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,17 +56,33 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 // retrieve data from firebase and display on respective field
-                String username = snapshot.child("username").getValue().toString();
+                username = snapshot.child("username").getValue().toString();
                 tvProfileUsername.setText(username);
-                String email = snapshot.child("email").getValue().toString();
+                email = snapshot.child("email").getValue().toString();
                 tvProfileEmail.setText(email);
-                Uri profileImgUri = Uri.parse(snapshot.child("profileImgUri").getValue().toString());
+                profileImgUri = Uri.parse(snapshot.child("profileImgUri").getValue().toString());
                 Picasso.get().load(profileImgUri).into(civProfileImg);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(ProfileActivity.this, "Cancelled", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btnResetPassword = (TextView) findViewById(R.id.btnResetPassword);
+        btnResetPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendResetPasswordEmail();
+                AlertDialog resetPasswordDialog = new AlertDialog.Builder(view.getContext()).setTitle("Reset Password")
+                        .setMessage("Reset password link has been sent to your email")
+                        .setPositiveButton("ok", new DialogInterface.OnClickListener(){
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                return;
+                            }
+                        }).show();
             }
         });
 
@@ -75,6 +96,20 @@ public class ProfileActivity extends AppCompatActivity {
 
         bottomNavigation();
 
+    }
+
+    private void sendResetPasswordEmail() {
+        mAuth.sendPasswordResetEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Toast.makeText(ProfileActivity.this, "Reset link has been sent to your email.", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(ProfileActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void sendToMainActivity() {
@@ -91,12 +126,6 @@ public class ProfileActivity extends AppCompatActivity {
                 case R.id.home:
                     item.setChecked(true);
                     startActivity(new Intent(ProfileActivity.this, HomeActivity.class));
-                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-                    finish();
-                    break;
-                case R.id.shoppinglist:
-                    item.setChecked(true);
-                    startActivity(new Intent(ProfileActivity.this, MessageTesting.class));
                     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                     finish();
                     break;

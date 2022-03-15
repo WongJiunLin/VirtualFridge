@@ -51,9 +51,9 @@ public class EditItemActivity extends AppCompatActivity implements DatePickerDia
     private Uri imageUri, itemImgHint;
 
     private ImageView ivEditItemImage;
-    private TextInputLayout txtIptLayoutItemType, txtIptLayoutItemCategory,txtIptLayoutItemExpirationDate;
+    private TextInputLayout txtIptLayoutItemType, txtIptLayoutItemCategory,txtIptLayoutItemExpirationDate, txtIptLayoutItemPosition;
     private TextInputEditText edtItemName;
-    private AutoCompleteTextView dropdownItemType, dropdownItemCategory, tvItemExpirationDate;
+    private AutoCompleteTextView dropdownItemType, dropdownItemCategory, dropdownItemPosition, tvItemExpirationDate;
     private TextView tvEditItemBanner, tvCheckExpiry, tvItemCategoryHint, tvItemShelfLifeHint, tvAddItemBanner;
     private CircleImageView civPopOutImg;
     private ImageButton editItemButton, imgBtnClosePopOut;
@@ -67,12 +67,12 @@ public class EditItemActivity extends AppCompatActivity implements DatePickerDia
 
     private Calendar calForStoredDate, calForExpiryDate;
     private Date storedDate, expirationDate, edtExpirationDate;
-    private String itemName, itemType, itemCategory, itemStoredDate, itemExpirationDate, itemImageUri;
+    private String itemName, itemType, itemCategory, itemStoredDate, itemExpirationDate, itemPosition, itemImageUri;
 
     private Dialog expiryDialog;
     private String itemTypeHint, itemCategoryHint, itemShelfLifeHint;
 
-    private String edtItemType, edtItemCategory, edtItemExpirationDate;
+    private String edtItemType, edtItemCategory, edtItemExpirationDate, edtItemPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +89,7 @@ public class EditItemActivity extends AppCompatActivity implements DatePickerDia
         dropdownItemType = (AutoCompleteTextView) findViewById(R.id.dropdownItemType);
         dropdownItemCategory = (AutoCompleteTextView) findViewById(R.id.dropdownItemCategory);
         tvItemExpirationDate = (AutoCompleteTextView) findViewById(R.id.tvItemExpirationDate);
+        dropdownItemPosition = (AutoCompleteTextView) findViewById(R.id.dropdownItemPosition);
 
         pbEditItem = (ProgressBar) findViewById(R.id.pbEditItem);
 
@@ -134,6 +135,7 @@ public class EditItemActivity extends AppCompatActivity implements DatePickerDia
         // String array that consists of all fruit categories
         String[] itemFruitCategories = new String[]{
                 "Avocado",
+                "Bell Pepper",
                 "Berries",
                 "Citrus",
                 "Melon",
@@ -213,6 +215,27 @@ public class EditItemActivity extends AppCompatActivity implements DatePickerDia
             }
         });
 
+        // assign all the necessary item position choices into adapter
+        txtIptLayoutItemPosition = (TextInputLayout) findViewById(R.id.txtIptLayoutItemPosition);
+        String[] itemPositions = new String[]{
+                "TopLeft",
+                "Top",
+                "TopRight",
+                "MiddleLeft",
+                "Middle",
+                "MiddleRight",
+                "BottomLeft",
+                "Bottom",
+                "BottomRight"
+        };
+        ArrayAdapter<String> itemPositionAdapter = new ArrayAdapter<>(
+                EditItemActivity.this,
+                R.layout.dropdown_item,
+                itemPositions
+        );
+        dropdownItemPosition = (AutoCompleteTextView) findViewById(R.id.dropdownItemPosition);
+        dropdownItemPosition.setAdapter(itemPositionAdapter);
+
         itemRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -221,14 +244,16 @@ public class EditItemActivity extends AppCompatActivity implements DatePickerDia
                 itemType = snapshot.child("itemType").getValue().toString();
                 itemCategory = snapshot.child("itemCategory").getValue().toString();
                 itemExpirationDate = snapshot.child("itemExpirationDate").getValue().toString();
+                itemPosition = snapshot.child("itemPosition").getValue().toString();
                 itemImageUri = snapshot.child("itemImgUri").getValue().toString();
 
                 // assign item info into respective fields
                 Picasso.get().load(Uri.parse(itemImageUri)).into(ivEditItemImage);
                 edtItemName.setText(itemName);
-                dropdownItemType.setText(itemType);
+                dropdownItemType.setText(itemType, false);
                 dropdownItemCategory.setText(itemCategory);
                 tvItemExpirationDate.setText(itemExpirationDate);
+                dropdownItemPosition.setText(itemPosition, false);
             }
 
             @Override
@@ -379,6 +404,7 @@ public class EditItemActivity extends AppCompatActivity implements DatePickerDia
         itemMap.put("itemCategory",edtItemCategory);
         itemMap.put("itemStoredDate",itemStoredDate);
         itemMap.put("itemExpirationDate", edtItemExpirationDate);
+        itemMap.put("itemPosition", edtItemPosition);
         itemMap.put("itemImgUri",itemImageUri);
         itemMap.put("days",days);
 
@@ -402,6 +428,7 @@ public class EditItemActivity extends AppCompatActivity implements DatePickerDia
         edtItemType = dropdownItemType.getText().toString();
         edtItemCategory = dropdownItemCategory.getText().toString();
         edtItemExpirationDate = tvItemExpirationDate.getText().toString();
+        edtItemPosition = dropdownItemPosition.getText().toString();
 
         if (TextUtils.isEmpty(edtItemType)){
             dropdownItemType.setError("Please choose item type");
@@ -413,6 +440,10 @@ public class EditItemActivity extends AppCompatActivity implements DatePickerDia
         }
         if (TextUtils.isEmpty(edtItemExpirationDate)){
             tvItemExpirationDate.setError("Please pick item expiration date");
+            return;
+        }
+        if (TextUtils.isEmpty(edtItemPosition)){
+            dropdownItemPosition.setError("Please pick item expiration date");
             return;
         }
 

@@ -63,13 +63,6 @@ public class FriendListActivity extends AppCompatActivity {
                     overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
                     finish();
                     break;
-                case R.id.shoppinglist:
-                    item.setChecked(true);
-                    Intent intent2 = new Intent(FriendListActivity.this, MessageTesting.class);
-                    startActivity(intent2);
-                    overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
-                    finish();
-                    break;
                 case R.id.friendlist:
                     item.setCheckable(true);
                     break;

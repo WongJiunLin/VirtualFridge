@@ -133,12 +133,6 @@ public class HomeActivity extends AppCompatActivity {
                 case R.id.home:
                     item.setChecked(true);
                     break;
-                case R.id.shoppinglist:
-                    item.setChecked(true);
-                    startActivity(new Intent(HomeActivity.this, MessageTesting.class));
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                    finish();
-                    break;
                 case R.id.friendlist:
                     item.setChecked(true);
                     startActivity(new Intent(HomeActivity.this, FriendListActivity.class));

@@ -1,5 +1,6 @@
 package com.example.testingfyp;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +35,7 @@ public class AddParticipantsAdapter extends FirebaseRecyclerAdapter<Participant,
     private String fridgeKey;
     private DatabaseReference userRef, participantsRef;
 
-    private String currentUID, targetUserID;
+    private String currentUID, currentUsername, targetUserID, userTokenID;
 
     public AddParticipantsAdapter(String fridgeKey, @NonNull FirebaseRecyclerOptions<Participant> options) {
         super(options);
@@ -43,7 +44,7 @@ public class AddParticipantsAdapter extends FirebaseRecyclerAdapter<Participant,
 
     @Override
     protected void onBindViewHolder(@NonNull AddParticipantsAdapter.myViewHolder holder, int position, @NonNull Participant model) {
-        targetUserID = getRef(position).getKey();
+        targetUserID = getRef(holder.getAdapterPosition()).getKey();
         currentUID = FirebaseAuth.getInstance().getUid();
 
         userRef = FirebaseDatabase.getInstance().getReference().child("users").child(targetUserID);
@@ -67,11 +68,42 @@ public class AddParticipantsAdapter extends FirebaseRecyclerAdapter<Participant,
             }
         });
 
+        // obtain target device token id for notification sending purpose
+        FirebaseDatabase.getInstance().getReference().child("users").child(targetUserID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.hasChild("tokenID")){
+                    userTokenID = snapshot.child("tokenID").getValue().toString();
+                    Log.d("userTokenID", userTokenID);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        //obtain current username
+        FirebaseDatabase.getInstance().getReference().child("users").child(currentUID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.hasChild("username")){
+                    currentUsername = snapshot.child("username").getValue().toString();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         participantsRef = FirebaseDatabase.getInstance().getReference().child("users").child(currentUID).child("fridges").child(fridgeKey).child("participants");
         participantsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (!snapshot.hasChild(getRef(position).getKey())){
+                if (!snapshot.hasChild(getRef(holder.getAdapterPosition()).getKey())){
                     holder.btnAddParticipant.setVisibility(View.VISIBLE);
                     holder.btnAddParticipant.setEnabled(true);
                 }else{
@@ -90,7 +122,7 @@ public class AddParticipantsAdapter extends FirebaseRecyclerAdapter<Participant,
             public void onClick(View v) {
                 String option = holder.btnAddParticipant.getText().toString().toLowerCase();
                 if (option.equals("add")){
-                    addTargetUserToFridge(v, position, holder);
+                    addTargetUserToFridge(v, holder.getAdapterPosition(), holder);
                 }
 
             }
@@ -121,6 +153,7 @@ public class AddParticipantsAdapter extends FirebaseRecyclerAdapter<Participant,
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()){
+                                                sendNotification("addIntoFridge",v, fridgeName);
                                                 Toast.makeText(v.getContext(), "Successfully added user into current fridge.", Toast.LENGTH_SHORT).show();
                                                 AddParticipantsAdapter.this.notifyDataSetChanged();
                                             }
@@ -141,6 +174,15 @@ public class AddParticipantsAdapter extends FirebaseRecyclerAdapter<Participant,
 
                     }
                 });
+    }
+
+    private void sendNotification(String notificationType, View v, String fridgeName) {
+        if (notificationType.equals("addIntoFridge")){
+            String title = "Fridge invitation";
+            String message = currentUsername + " has added you inside " + fridgeName + ".";
+            FCMSend.pushNotification(v.getContext(), userTokenID, title, message);
+        }
+
     }
 
     @Override

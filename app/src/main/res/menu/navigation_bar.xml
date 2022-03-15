@@ -4,10 +4,6 @@
         android:icon="@drawable/homepage_icon"
         android:checkable="true"
         android:title="HOME"/>
-    <item android:id="@+id/shoppinglist"
-        android:icon="@drawable/cart_icon"
-        android:checkable="true"
-        android:title="SHOPPING LIST"/>
     <item android:id="@+id/friendlist"
         android:icon="@drawable/friendlist_icon"
         android:checkable="true"

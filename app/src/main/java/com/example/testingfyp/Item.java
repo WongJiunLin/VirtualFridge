@@ -3,17 +3,18 @@ package com.example.testingfyp;
 import java.util.Date;
 
 public class Item {
-    String itemName, itemStoredDate, itemExpirationDate, placedBy;
+    String itemName, itemStoredDate, itemExpirationDate, itemPosition, placedBy;
     String itemImgUri;
     int days;
 
     public Item() {
     }
 
-    public Item(String itemName, String itemStoredDate, String itemExpirationDate, String placedBy, String itemImgUri, int days) {
+    public Item(String itemName, String itemStoredDate, String itemExpirationDate, String itemPosition, String placedBy, String itemImgUri, int days) {
         this.itemName = itemName;
         this.itemStoredDate = itemStoredDate;
         this.itemExpirationDate = itemExpirationDate;
+        this.itemPosition = itemPosition;
         this.placedBy = placedBy;
         this.itemImgUri = itemImgUri;
         this.days = days;
@@ -41,6 +42,14 @@ public class Item {
 
     public void setItemExpirationDate(String itemExpirationDate) {
         this.itemExpirationDate = itemExpirationDate;
+    }
+
+    public String getItemPosition() {
+        return itemPosition;
+    }
+
+    public void setItemPosition(String itemPosition) {
+        this.itemPosition = itemPosition;
     }
 
     public String getPlacedBy() {

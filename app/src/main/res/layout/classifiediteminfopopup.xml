@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="300dp"
+    android:layout_height="500dp"
+    android:background="@color/dark_gray"
+    android:padding="5dp"
+    android:layout_gravity="center">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:text="Is this your item?"
+            android:textSize="23sp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:layout_margin="10dp"/>
+        <ImageButton
+            android:id="@+id/imgBtnClassifiedItemClosePopOut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/clear_button"
+            android:layout_gravity="end"/>
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/civClassifiedItemImg"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:src="@drawable/icon_not_found" />
+
+        <TextView
+            android:id="@+id/tvClassifiedItemName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/civClassifiedItemImg"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="sans-serif-black"
+            android:text="Item Name"
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvClassifiedItemTypeBanner"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvClassifiedItemName"
+            android:layout_marginLeft="30dp"
+            android:fontFamily="sans-serif-black"
+            android:text="Category: "
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tvClassifiedItemType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvClassifiedItemName"
+            android:layout_toRightOf="@+id/tvClassifiedItemCategoryBanner"
+            android:fontFamily="sans-serif-black"
+            android:text="Item Type"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tvClassifiedItemCategoryBanner"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvClassifiedItemTypeBanner"
+            android:layout_marginLeft="30dp"
+            android:fontFamily="sans-serif-black"
+            android:text="Type: "
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:layout_marginTop="10dp"/>
+
+        <TextView
+            android:id="@+id/tvClassifiedItemCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvClassifiedItemType"
+            android:layout_toRightOf="@+id/tvClassifiedItemCategoryBanner"
+            android:fontFamily="sans-serif-black"
+            android:text="Item Category"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:layout_marginTop="10dp"/>
+
+        <TextView
+            android:id="@+id/tvRecommendationBanner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvClassifiedItemTypeBanner"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
+            android:fontFamily="sans-serif-black"
+            android:text="Recommended to store in fridge"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tvClassifiedItemShelfLife"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvRecommendationBanner"
+            android:layout_centerHorizontal="true"
+            android:text="duration"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:layout_marginTop="10dp"/>
+
+        <Button
+            android:id="@+id/btnCorrectClassified"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvClassifiedItemShelfLife"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="@color/requestFriend"
+            android:text="YES" />
+        <Button
+            android:id="@+id/btnWrongClassified"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NO"
+            android:backgroundTint="@color/declineFriend"
+            android:layout_toRightOf="@+id/btnCorrectClassified"
+            android:layout_below="@+id/tvClassifiedItemShelfLife"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="50dp"/>
+    </RelativeLayout>
+
+
+
+</LinearLayout>
