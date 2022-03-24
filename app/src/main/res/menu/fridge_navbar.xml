@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/freezer"
+        android:icon="@drawable/icon_freeze"
+        android:checkable="true"
+        android:title="FREEZER"/>
+    <item android:id="@+id/shelf"
+        android:icon="@drawable/icon_shelf"
+        android:checkable="true"
+        android:title="SHELF"/>
+    <item android:id="@+id/drawer"
+        android:icon="@drawable/icon_drawer"
+        android:checkable="true"
+        android:title="DRAWER"/>
+</menu>

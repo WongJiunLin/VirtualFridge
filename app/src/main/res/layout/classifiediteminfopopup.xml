@@ -120,11 +120,12 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvRecommendationBanner"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
             android:text="duration"
+            android:textAlignment="center"
             android:textColor="@color/white"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:layout_marginTop="10dp"/>
+            android:textSize="15sp"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/btnCorrectClassified"

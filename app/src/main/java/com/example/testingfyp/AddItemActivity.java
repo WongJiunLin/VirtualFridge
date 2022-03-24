@@ -35,7 +35,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.testingfyp.ml.ModelV6;
+import com.example.testingfyp.ml.ModelV11;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
@@ -77,21 +77,21 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
     private TextInputLayout txtIptLayoutItemType, txtIptLayoutItemCategory,txtIptLayoutItemExpirationDate, txtIptLayoutItemPosition;
     private AutoCompleteTextView dropdownItemType, dropdownItemCategory,tvItemExpirationDate, dropdownItemPosition;
     private TextInputEditText edtItemName;
-    private ImageButton addItemButton, clearItemButton, imgBtnClosePopOut, imgBtnClassifyItem, imgBtnClassifiedItemClosePopOut;
+    private ImageButton addItemButton, clearItemButton, imgBtnClosePopOut, imgBtnClassifyItem, imgBtnClassifiedItemClosePopOut, imgBtnCloseNotRecommendedPopup;
     private ImageView ivItemImage;
     private ProgressBar pbAddItem;
 
-    private CircleImageView civPopOutImg, civClassifiedItemImg;
+    private CircleImageView civPopOutImg, civClassifiedItemImg, civNotRecommendedItemImg;
 
     private StorageReference itemImageRef;
     private DatabaseReference itemRef, itemShelfLifeRef;
     private FirebaseAuth mAuth;
     private String currentUserId, currentUsername, saveCurrentDate, saveCurrentTime, imgRandomName, downloadUri;
 
-    private Intent intentFromFridgeActivity;
+    private Intent intentFromOthers;
     private Date storedDate, expirationDate;
     private String itemName, itemType, itemCategory, itemStoredDate, itemExpirationDate, itemExpiryDate, itemPosition;
-    private String fridgeKey, containerType, itemTypeHint, itemCategoryHint, itemShelfLifeHint, createdBy;
+    private String fridgeKey, containerType, containerKey, itemTypeHint, itemCategoryHint, itemShelfLifeHint, createdBy;
     private ArrayAdapter<String> itemTypeAdapter;
 
     private String classifiedResult;
@@ -101,8 +101,8 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
 
     private TextView tvCheckExpiry, tvItemCategoryHint, tvItemShelfLifeHint, tvAddItemBanner;
     private TextView tvClassifiedItemName, tvClassifiedItemCategory, tvClassifiedItemType, tvClassifiedItemShelfLife;
-    private Dialog expiryDialog, classifiedDialog;
-    private Button btnCorrectClassified, btnWrongClassified;
+    private Dialog expiryDialog, classifiedDialog, notRecommendedDialog;
+    private Button btnCorrectClassified, btnWrongClassified, btnContinueAdd, btnCancelAdd;
 
     private static int Gallery_Pick = 1;
 
@@ -114,10 +114,11 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
 
-        intentFromFridgeActivity = getIntent();
-        fridgeKey = intentFromFridgeActivity.getStringExtra("fridgeKey");
-        containerType = intentFromFridgeActivity.getStringExtra("containerType");
-        createdBy = intentFromFridgeActivity.getStringExtra("createdBy");
+        intentFromOthers = getIntent();
+        fridgeKey = intentFromOthers.getStringExtra("fridgeKey");
+        containerType = intentFromOthers.getStringExtra("containerType");
+        containerKey = intentFromOthers.getStringExtra("containerKey");
+        createdBy = intentFromOthers.getStringExtra("createdBy");
 
         mAuth = FirebaseAuth.getInstance();
         currentUserId = mAuth.getUid();
@@ -138,9 +139,9 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
 
         pbAddItem = (ProgressBar) findViewById(R.id.pbAddItem);
 
-        itemImageRef = FirebaseStorage.getInstance().getReference().child("users").child(createdBy).child("fridges").child(fridgeKey).child("item images");
+        itemImageRef = FirebaseStorage.getInstance().getReference().child("users").child(createdBy).child("fridges").child(fridgeKey).child(containerType).child(containerKey).child("item images");
         itemRef = FirebaseDatabase.getInstance().getReference().child("users").child(createdBy)
-                .child("fridges").child(fridgeKey).child(containerType).child("items");
+                .child("fridges").child(fridgeKey).child(containerType).child(containerKey).child("items");
         itemShelfLifeRef = FirebaseDatabase.getInstance().getReference().child("shelf-life");
 
         // assign all the necessary item type choices into adapter,
@@ -302,6 +303,7 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
         });
 
         // while click on the back button close current activity
+        notRecommendedDialog = new Dialog(this);
         tvAddItemBanner = (TextView) findViewById(R.id.tvAddItemBanner);
         tvAddItemBanner.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -339,7 +341,7 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
 
     private void classifyImage(Bitmap image) {
         try {
-            ModelV6 model = ModelV6.newInstance(getApplicationContext());
+            ModelV11 model = ModelV11.newInstance(getApplicationContext());
 
             // Creates inputs for reference.
 
@@ -366,7 +368,7 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
             inputFeature0.loadBuffer(byteBuffer);
 
             // Runs model inference and gets result.
-            ModelV6.Outputs outputs = model.process(inputFeature0);
+            ModelV11.Outputs outputs = model.process(inputFeature0);
             TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
 
             float[] confidence = outputFeature0.getFloatArray();
@@ -577,7 +579,55 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
             return;
         }
 
-        insertImageToFirebaseStorage();
+        // if current container type is freezer then not recommend user to store
+        // things beside seafood and fresh meat.
+        if (containerType.equals("freezers")){
+            if (itemType.equals("Fruits") || itemType.equals("Vegetables")){
+                showNotRecommendedPopup();
+            }else{
+                insertImageToFirebaseStorage();
+            }
+        } else{
+            insertImageToFirebaseStorage();
+        }
+
+    }
+
+    private void showNotRecommendedPopup() {
+        notRecommendedDialog.setContentView(R.layout.notrecommendedpopup);
+        imgBtnCloseNotRecommendedPopup = (ImageButton) notRecommendedDialog.findViewById(R.id.imgBtnCloseNotRecommendedPopup);
+        imgBtnCloseNotRecommendedPopup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                notRecommendedDialog.dismiss();
+            }
+        });
+        imgBtnCloseNotRecommendedPopup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                notRecommendedDialog.dismiss();
+            }
+        });
+
+        btnContinueAdd = (Button) notRecommendedDialog.findViewById(R.id.btnContinueAdd);
+        btnContinueAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                notRecommendedDialog.dismiss();
+                insertImageToFirebaseStorage();
+            }
+        });
+
+        btnCancelAdd = (Button) notRecommendedDialog.findViewById(R.id.btnCancelAdd);
+        btnCancelAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                notRecommendedDialog.dismiss();
+            }
+        });
+
+        notRecommendedDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        notRecommendedDialog.show();
 
     }
 

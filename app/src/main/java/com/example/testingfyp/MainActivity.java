@@ -15,8 +15,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
@@ -26,15 +28,15 @@ import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView tvRegisterAccount, tvAlertLoginError;
-    private EditText edt_singInAccount, edt_signInPassword;
+    private TextView tvRegisterAccount, tvAlertLoginError, tvForgetPassword;
+    private TextInputEditText edt_signInAccount, edt_signInPassword;
     private Button signInButton;
 
     private ProgressBar pbLogin;
 
     private FirebaseAuth mAuth;
 
-    private String currentUID, tokenID;
+    private String currentUID, tokenID, email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +44,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         tvRegisterAccount = (TextView) findViewById(R.id.tvRegisterAccount);
-        edt_singInAccount = (EditText) findViewById(R.id.edt_signInAccount);
-        edt_signInPassword = (EditText) findViewById(R.id.edt_signInPassword);
+        edt_signInAccount = (TextInputEditText) findViewById(R.id.edt_signInAccount);
+        edt_signInPassword = (TextInputEditText) findViewById(R.id.edt_signInPassword);
         signInButton = (Button) findViewById(R.id.signInButton);
 
         pbLogin = (ProgressBar) findViewById(R.id.pbLogin);
@@ -65,14 +67,42 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        tvForgetPassword = (TextView) findViewById(R.id.tvForgotPassword);
+        tvForgetPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                email = edt_signInAccount.getText().toString();
+                if (TextUtils.isEmpty(email)){
+                    edt_signInAccount.setError("Please type in your email before changing password");
+                }else{
+                    sendResetPasswordEmail();
+                }
+
+            }
+        });
+
+    }
+
+    private void sendResetPasswordEmail() {
+        mAuth.sendPasswordResetEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Toast.makeText(MainActivity.this, "Reset link has been sent to your email.", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void accountLogin() {
-        String signInAccount = edt_singInAccount.getText().toString();
+        String signInAccount = edt_signInAccount.getText().toString();
         String signInPassword = edt_signInPassword.getText().toString();
 
         if (TextUtils.isEmpty(signInAccount)){
-            edt_singInAccount.setError("Require field");
+            edt_signInAccount.setError("Require field");
             return;
         }
         if (TextUtils.isEmpty(signInPassword)){

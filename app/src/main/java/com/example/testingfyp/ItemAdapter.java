@@ -1,14 +1,19 @@
 package com.example.testingfyp;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,17 +51,25 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myViewHolder> {
 
-    private String fridgeKey, containerType, createdBy;
+    private String fridgeKey, containerType, containerKey, createdBy;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private String currentUserId = mAuth.getUid();
 
-    private String itemExpirationDate;
+    private String currentItemId;
     private int colorAlert, colorModerate, colorSafe;
 
-    public ItemAdapter(String fridgeKey, String containerType, String createdBy, @NonNull FirebaseRecyclerOptions<Item> options) {
+    private Dialog itemDialog;
+    private TextView tvItemName, tvPlacedBy, tvAvailableDay, tvItemPosition;
+    private CircleImageView civItemImg;
+    private ImageButton imgBtnItemInfoClosePopOut;
+    private LinearLayout llItemInfo;
+    private Button btnEditItem, btnDeleteItem;
+
+    public ItemAdapter(String fridgeKey, String containerType, String containerKey, String createdBy, @NonNull FirebaseRecyclerOptions<Item> options) {
         super(options);
         this.fridgeKey = fridgeKey;
         this.containerType = containerType;
+        this.containerKey = containerKey;
         this.createdBy = createdBy;
     }
 
@@ -64,7 +77,7 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
     protected void onBindViewHolder(@NonNull ItemAdapter.myViewHolder holder, int position, @NonNull Item model) {
 
         // current Item
-        String currentItemId = getRef(holder.getAdapterPosition()).getKey();
+        currentItemId = getRef(holder.getAdapterPosition()).getKey();
 
         // obtain color code
         colorAlert = holder.cvItem.getResources().getColor(R.color.nearlyExpired);
@@ -72,7 +85,7 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
         colorSafe = holder.cvItem.getResources().getColor(R.color.safeExpired);
 
         FirebaseDatabase.getInstance().getReference()
-                .child("users").child(createdBy).child("fridges").child(fridgeKey).child(containerType)
+                .child("users").child(createdBy).child("fridges").child(fridgeKey).child(containerType).child(containerKey)
                 .child("items").child(currentItemId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -98,7 +111,7 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
                 HashMap daysBetweenMap = new HashMap();
                 daysBetweenMap.put("days",daysBetween);
                 FirebaseDatabase.getInstance().getReference()
-                        .child("users").child(currentUserId).child("fridges").child(fridgeKey).child(containerType)
+                        .child("users").child(currentUserId).child("fridges").child(fridgeKey).child(containerType).child(containerKey)
                         .child("items").child(getRef(holder.getAdapterPosition()).getKey()).updateChildren(daysBetweenMap);
 
                 int days = Integer.parseInt(snapshot.child("days").getValue().toString());
@@ -147,30 +160,74 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
 
         // display data in the item card view
         holder.cardTvItemName.setText(model.getItemName());
-        holder.cardTvPlacedBy.setText(model.getPlacedBy());
-        holder.cardTvExpirationDate.setText(model.getItemExpirationDate());
-        holder.cardTvItemAvailableDay.setText(String.valueOf(model.getDays()));
         Picasso.get().load(model.getItemImgUri()).into(holder.cIvItemImg);
 
-        // click edit button to proceed to edit item activity
-        holder.btnEditItem.setOnClickListener(new View.OnClickListener() {
+        holder.cvItem.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                String curItemId = getRef(holder.getAdapterPosition()).getKey();
-                Intent intent = new Intent(v.getContext(), EditItemActivity.class);
-                intent.putExtra("fridgeKey", fridgeKey);
-                intent.putExtra("containerType", containerType);
-                intent.putExtra("createdBy", createdBy);
-                intent.putExtra("curItemId", curItemId);
-                v.getContext().startActivity(intent);
+            public void onClick(View view) {
+                showItemInfoPopup(holder, view, model);
             }
         });
 
-        // click delete button to remove item
-        holder.btnDeleteItem.setOnClickListener(new View.OnClickListener() {
+    }
+
+    private void showItemInfoPopup(ItemAdapter.myViewHolder holder, View v, Item model) {
+        itemDialog = new Dialog(v.getContext());
+        itemDialog.setContentView(R.layout.iteminfopopup);
+
+        tvItemName = (TextView) itemDialog.findViewById(R.id.tvItemName);
+        tvPlacedBy = (TextView) itemDialog.findViewById(R.id.tvPlacedBy);
+        tvAvailableDay = (TextView) itemDialog.findViewById(R.id.tvAvailableDay);
+        tvItemPosition = (TextView) itemDialog.findViewById(R.id.tvItemPosition);
+        llItemInfo = (LinearLayout) itemDialog.findViewById(R.id.llItemInfo);
+        civItemImg = (CircleImageView) itemDialog.findViewById(R.id.civItemImg);
+
+        tvItemName.setText(model.getItemName());
+        tvPlacedBy.setText(model.getPlacedBy());
+        tvAvailableDay.setText(String.valueOf(model.getDays()) + " days");
+        tvItemPosition.setText(model.getItemPosition());
+        Picasso.get().load(model.getItemImgUri()).into(civItemImg);
+
+        int days = model.getDays();
+        if (days<=1){
+            llItemInfo.setBackgroundColor(colorAlert);
+        }
+        else if (days>1 && days<=7){
+            llItemInfo.setBackgroundColor(colorModerate);
+        }
+        else if(days>7){
+            llItemInfo.setBackgroundColor(colorSafe);
+        }
+
+        imgBtnItemInfoClosePopOut = (ImageButton) itemDialog.findViewById(R.id.imgBtnItemInfoClosePopOut);
+        imgBtnItemInfoClosePopOut.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(holder.cardTvItemName.getContext());
+            public void onClick(View view) {
+                itemDialog.dismiss();
+            }
+        });
+
+        btnEditItem = (Button) itemDialog.findViewById(R.id.btnEditItem);
+        btnEditItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String curItemId = getRef(holder.getAdapterPosition()).getKey();
+                Intent intent = new Intent(view.getContext(), EditItemActivity.class);
+                intent.putExtra("fridgeKey", fridgeKey);
+                intent.putExtra("containerType", containerType);
+                intent.putExtra("containerKey", containerKey);
+                intent.putExtra("createdBy", createdBy);
+                intent.putExtra("curItemId", curItemId);
+                itemDialog.dismiss();
+                view.getContext().startActivity(intent);
+            }
+        });
+
+        btnDeleteItem = (Button) itemDialog.findViewById(R.id.btnDeleteItem);
+        btnDeleteItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
                 builder.setTitle("Are you sure?");
                 builder.setMessage("Deleted item cannot be recovered");
 
@@ -179,7 +236,7 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
                     public void onClick(DialogInterface dialog, int which) {
                         // remove item in respective fridge
                         FirebaseDatabase.getInstance().getReference()
-                                .child("users").child(createdBy).child("fridges").child(fridgeKey).child(containerType)
+                                .child("users").child(createdBy).child("fridges").child(fridgeKey).child(containerType).child(containerKey)
                                 .child("items").child(getRef(holder.getAdapterPosition()).getKey()).removeValue();
 
                         //remove respective item in expired item list
@@ -191,25 +248,29 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
                         FirebaseDatabase.getInstance().getReference()
                                 .child("users").child(createdBy).child("fridges").child(fridgeKey).child("merelyExpiredItems")
                                 .child(getRef(holder.getAdapterPosition()).getKey()).removeValue();
-
+                        itemDialog.dismiss();
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(holder.cardTvItemName.getContext(), "Cancelled", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(view.getContext(), "Cancelled", Toast.LENGTH_SHORT).show();
                     }
                 });
                 builder.show();
             }
         });
+
+        itemDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        itemDialog.show();
+
     }
 
 
     @NonNull
     @Override
     public myViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_cardview, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_cardview_2, parent, false);
         return new myViewHolder(view);
     }
 
@@ -218,8 +279,7 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
 
         private CardView cvItem;
         private CircleImageView cIvItemImg;
-        private TextView cardTvItemName, cardTvPlacedBy, cardTvExpirationDate, cardTvItemAvailableDay;
-        private Button btnEditItem, btnDeleteItem;
+        private TextView cardTvItemName;
 
         public myViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -228,12 +288,6 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
 
             cIvItemImg =(CircleImageView) itemView.findViewById(R.id.cardCIvItemImage);
             cardTvItemName = (TextView) itemView.findViewById(R.id.cardTvItemName);
-            cardTvPlacedBy = (TextView) itemView.findViewById(R.id.cardTvPlacedBy);
-            cardTvExpirationDate = (TextView) itemView.findViewById(R.id.cardTvExpirationDate);
-
-            btnEditItem = (Button) itemView.findViewById(R.id.btnEditItem);
-            btnDeleteItem = (Button) itemView.findViewById(R.id.btnDeleteItem);
-            cardTvItemAvailableDay = (TextView) itemView.findViewById(R.id.cardTvItemAvailableDay);
 
         }
     }

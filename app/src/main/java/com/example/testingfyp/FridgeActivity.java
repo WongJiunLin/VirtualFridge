@@ -10,14 +10,19 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.AdditionalUserInfo;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -26,21 +31,31 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
+
 public class FridgeActivity extends AppCompatActivity {
 
     private TextView tvFridgeNameBanner;
 
-    private RecyclerView rvFreezer, rvShelf, rvDrawer, rvMerelyExpiredItems;
-    private ImageButton btnFreezerAdd, btnShelfAdd, btnDrawerAdd, imgBtnBack, imgBtnAddParticipants, imgBtnClosePopout;
-    private ItemAdapter itemAdapterForFreezer, itemAdapterForShelf, itemAdapterForDrawer;
+    private RecyclerView rvFreezer, rvMerelyExpiredItems;
+    private ImageButton imgBtnBack, imgBtnAddParticipants, imgBtnClosePopout;
     private MerelyExpiredItemsAdapter merelyExpiredItemsAdapter;
 
-    private Button  btnCheckExpiredItems;
-
     private FirebaseAuth mAuth;
-    private String currentUserId;
+    private String currentUserId, fridgeName, fridgeKey, createdBy;
 
     private Intent intentFromFridgeAdapter;
+
+    // version 2
+    private ImageButton imgBtnCreateFreezer, imgBtnCloseCreateContainerPopup;
+    private ContainerAdapter containerAdapter;
+    private Dialog containerDialog;
+    private EditText edtContainerName;
+    private Button btnConfirm;
+    private String containerName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,22 +64,11 @@ public class FridgeActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         currentUserId = mAuth.getUid();
 
-        // recycler view for freezer area
-        rvFreezer = findViewById(R.id.rvFreezer);
-        rvFreezer.setLayoutManager(new LinearLayoutManager(this));
-
-        // recycler view for shelf area
-        rvShelf = findViewById(R.id.rvShelf);
-        rvShelf.setLayoutManager(new LinearLayoutManager(this));
-
-        // recycler view for drawer area
-        rvDrawer = findViewById(R.id.rvDrawer);
-        rvDrawer.setLayoutManager(new LinearLayoutManager(this));
 
         intentFromFridgeAdapter = getIntent();
-        String fridgeName = intentFromFridgeAdapter.getStringExtra("fridgeName");
-        String fridgeKey = intentFromFridgeAdapter.getStringExtra("fridgeKey");
-        String createdBy = intentFromFridgeAdapter.getStringExtra("createdBy");
+        fridgeName = intentFromFridgeAdapter.getStringExtra("fridgeName");
+        fridgeKey = intentFromFridgeAdapter.getStringExtra("fridgeKey");
+        createdBy = intentFromFridgeAdapter.getStringExtra("createdBy");
         tvFridgeNameBanner = findViewById(R.id.tvFridgeNameBanner);
         tvFridgeNameBanner.setText(fridgeName);
 
@@ -103,81 +107,122 @@ public class FridgeActivity extends AppCompatActivity {
             }
         });
 
-        // set up the recycler options for the freezer
-        FirebaseRecyclerOptions<Item> freezerOptions =
-                new FirebaseRecyclerOptions.Builder<Item>()
-                .setQuery(FirebaseDatabase.getInstance().getReference().child("users").child(createdBy)
-                        .child("fridges").child(fridgeKey).child("freezer").child("items").orderByChild("days"),Item.class).build();
-        itemAdapterForFreezer = new ItemAdapter(fridgeKey,"freezer", createdBy, freezerOptions);
-        rvFreezer.setAdapter(itemAdapterForFreezer);
+        rvFreezer = (RecyclerView) findViewById(R.id.rvFreezer);
+        rvFreezer.setLayoutManager(new LinearLayoutManager(this));
 
-        // set up the recycler options for the shelf
-        FirebaseRecyclerOptions<Item> shelfOptions =
-                new FirebaseRecyclerOptions.Builder<Item>()
-                .setQuery(FirebaseDatabase.getInstance().getReference().child("users").child(createdBy)
-                        .child("fridges").child(fridgeKey).child("shelf").child("items").orderByChild("days"),Item.class).build();
-        itemAdapterForShelf = new ItemAdapter(fridgeKey,"shelf", createdBy, shelfOptions);
-        rvShelf.setAdapter(itemAdapterForShelf);
+        FirebaseRecyclerOptions<Container> options =
+                new FirebaseRecyclerOptions.Builder<Container>()
+                .setQuery(FirebaseDatabase.getInstance().getReference().child("users").child(createdBy).child("fridges")
+                .child(fridgeKey).child("freezers"), Container.class)
+                .build();
+        containerAdapter = new ContainerAdapter(fridgeKey, "freezers", createdBy, options);
+        rvFreezer.setAdapter(containerAdapter);
 
-        // set up the recycler options for the drawer
-        FirebaseRecyclerOptions<Item> drawerOptions =
-                new FirebaseRecyclerOptions.Builder<Item>()
-                        .setQuery(FirebaseDatabase.getInstance().getReference().child("users").child(createdBy)
-                                .child("fridges").child(fridgeKey).child("drawer").child("items").orderByChild("days"),Item.class).build();
-        itemAdapterForDrawer = new ItemAdapter(fridgeKey,"drawer", createdBy, drawerOptions);
-        rvDrawer.setAdapter(itemAdapterForDrawer);
-
-        //actions occurred when click on different add button at different container
-        //while press on add button in freezer, item added in next step would be stored in freezer
-        btnFreezerAdd = findViewById(R.id.btnAddFreezer);
-        btnFreezerAdd.setOnClickListener(new View.OnClickListener() {
+        containerDialog = new Dialog(this);
+        imgBtnCreateFreezer = (ImageButton) findViewById(R.id.imgBtnCreateFreezer);
+        imgBtnCreateFreezer.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent intentAddItemToFreezer = new Intent(FridgeActivity.this, AddItemActivity.class);
-                intentAddItemToFreezer.putExtra("fridgeKey", fridgeKey);
-                intentAddItemToFreezer.putExtra("containerType","freezer");
-                intentAddItemToFreezer.putExtra("createdBy", createdBy);
-                startActivity(intentAddItemToFreezer);
+            public void onClick(View view) {
+                showCreateContainerPopUp();
             }
         });
 
-        //while press on add button in shelf, item added in next step would be stored in shelf
-        btnShelfAdd = findViewById(R.id.btnAddShelf);
-        btnShelfAdd.setOnClickListener(new View.OnClickListener() {
+        fridgeNavigation();
+    }
+
+    private void showCreateContainerPopUp() {
+        containerDialog.setContentView(R.layout.createcontainerpopup);
+        edtContainerName = (EditText) containerDialog.findViewById(R.id.edtContainerName);
+
+        // if user confirm creation, further record would be created in database
+        btnConfirm = (Button) containerDialog.findViewById(R.id.btnConfirm);
+        btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent intentAddItemToShelf = new Intent(FridgeActivity.this, AddItemActivity.class);
-                intentAddItemToShelf.putExtra("fridgeKey", fridgeKey);
-                intentAddItemToShelf.putExtra("containerType","shelf");
-                intentAddItemToShelf.putExtra("createdBy", createdBy);
-                startActivity(intentAddItemToShelf);
+            public void onClick(View view) {
+                containerName = edtContainerName.getText().toString();
+                if (!TextUtils.isEmpty(containerName)){
+                    createContainerIntoDatabase();
+                    containerDialog.dismiss();
+                }else{
+                    edtContainerName.setError("Please type in container name");
+                    return;
+                }
             }
         });
 
-        //while press on add button in drawer, item added in next step would be stored in shelf
-        btnDrawerAdd = findViewById(R.id.btnAddDrawer);
-        btnDrawerAdd.setOnClickListener(new View.OnClickListener() {
+        imgBtnCloseCreateContainerPopup = (ImageButton) containerDialog.findViewById(R.id.imgBtnCloseCreateContainerPopOut);
+        imgBtnCloseCreateContainerPopup.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent intentAddItemToDrawer = new Intent(FridgeActivity.this, AddItemActivity.class);
-                intentAddItemToDrawer.putExtra("fridgeKey", fridgeKey);
-                intentAddItemToDrawer.putExtra("containerType","drawer");
-                intentAddItemToDrawer.putExtra("createdBy", createdBy);
-                startActivity(intentAddItemToDrawer);
+            public void onClick(View view) {
+                containerDialog.dismiss();
             }
         });
 
-        btnCheckExpiredItems = (Button) findViewById(R.id.btnCheckExpiredItems);
-        btnCheckExpiredItems.setOnClickListener(new View.OnClickListener() {
+        containerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        containerDialog.show();
+
+    }
+
+    private void createContainerIntoDatabase() {
+        Calendar calForDate = Calendar.getInstance();
+        SimpleDateFormat currentDate = new SimpleDateFormat("dd-MMMM-YYYY");
+        String containerCreatedDate =currentDate.format(calForDate.getTime());
+
+        Calendar calForTime = Calendar.getInstance();
+        SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss");
+        String containerCreatedTime = currentTime.format(calForTime.getTime());
+
+        HashMap containerMap = new HashMap();
+        containerMap.put("containerName", containerName);
+        containerMap.put("containerCreatedDate", containerCreatedDate);
+        containerMap.put("createdBy", currentUserId);
+
+        FirebaseDatabase.getInstance().getReference().child("users").child(createdBy).child("fridges").child(fridgeKey)
+                .child("freezers").child(containerName+containerCreatedDate+containerCreatedTime).updateChildren(containerMap)
+                .addOnSuccessListener(new OnSuccessListener() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        Toast.makeText(FridgeActivity.this, containerName+ " created!", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onClick(View v) {
-                Intent intentToExpiredItems = new Intent(FridgeActivity.this, ExpiredItemsActivity.class);
-                intentToExpiredItems.putExtra("fridgeKey",fridgeKey);
-                intentToExpiredItems.putExtra("createdBy", createdBy);
-                startActivity(intentToExpiredItems);
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(FridgeActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
 
+    private void fridgeNavigation() {
+        BottomNavigationView bottomNavigationView = findViewById(R.id.fridge_navbar);
+        bottomNavigationView.setSelectedItemId(R.id.freezer);
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            switch (item.getItemId()){
+                case R.id.freezer:
+                    item.setChecked(true);
+                    break;
+                case R.id.drawer:
+                    item.setChecked(true);
+                    Intent intentToDrawerNav = new Intent(FridgeActivity.this, DrawerNavActivity.class);
+                    intentToDrawerNav.putExtra("fridgeName",fridgeName);
+                    intentToDrawerNav.putExtra("fridgeKey", fridgeKey);
+                    intentToDrawerNav.putExtra("createdBy", createdBy);
+                    startActivity(intentToDrawerNav);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    finish();
+                    break;
+                case R.id.shelf:
+                    item.setChecked(true);
+                    Intent intentToShelfNav = new Intent(FridgeActivity.this, ShelfNavActivity.class);
+                    intentToShelfNav.putExtra("fridgeName",fridgeName);
+                    intentToShelfNav.putExtra("fridgeKey", fridgeKey);
+                    intentToShelfNav.putExtra("createdBy", createdBy);
+                    startActivity(intentToShelfNav);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    finish();
+                    break;
+            }
+            return false;
+        });
     }
 
     private void showMerelyExpiredItemsPopOut(String fridgeKey, String createdBy) {
@@ -242,16 +287,12 @@ public class FridgeActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        itemAdapterForFreezer.startListening();
-        itemAdapterForShelf.startListening();
-        itemAdapterForDrawer.startListening();
+        containerAdapter.startListening();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        itemAdapterForFreezer.stopListening();
-        itemAdapterForShelf.stopListening();
-        itemAdapterForDrawer.stopListening();
+        containerAdapter.stopListening();
     }
 }

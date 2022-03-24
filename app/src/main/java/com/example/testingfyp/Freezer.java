@@ -3,32 +3,22 @@ package com.example.testingfyp;
 import java.util.List;
 
 public class Freezer {
-    List<Storage> storages;
-    String freezerId, freezerType;
+    String freezerName, freezerType;
 
     public Freezer() {
     }
 
     public Freezer(List<Storage> storages, String freezerId, String freezerType) {
-        this.storages = storages;
-        this.freezerId = freezerId;
+        this.freezerName = freezerId;
         this.freezerType = freezerType;
     }
 
-    public List<Storage> getStorages() {
-        return storages;
-    }
-
-    public void setStorages(List<Storage> storages) {
-        this.storages = storages;
-    }
-
     public String getFreezerId() {
-        return freezerId;
+        return freezerName;
     }
 
-    public void setFreezerId(String freezerId) {
-        this.freezerId = freezerId;
+    public void setFreezerId(String freezerName) {
+        this.freezerName = freezerName;
     }
 
     public String getFreezerType() {
