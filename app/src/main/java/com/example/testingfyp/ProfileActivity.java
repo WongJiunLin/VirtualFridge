@@ -16,6 +16,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -55,6 +59,9 @@ public class ProfileActivity extends AppCompatActivity {
 
     private static int Gallery_Pick = 1;
     private boolean profileImgChanged = false;
+
+    private GoogleSignInOptions gso;
+    private GoogleSignInClient gsc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,6 +136,8 @@ public class ProfileActivity extends AppCompatActivity {
                 validateUpdateProfileInfo();
             }
         });
+
+
 
         bottomNavigation();
 
@@ -235,6 +244,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void sendToMainActivity() {
         mAuth.signOut();
+        finish();
         startActivity(new Intent(ProfileActivity.this, MainActivity.class));
     }
 

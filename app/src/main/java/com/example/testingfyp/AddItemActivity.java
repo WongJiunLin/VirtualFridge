@@ -35,7 +35,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.testingfyp.ml.ModelV11;
+import com.example.testingfyp.ml.Model;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
@@ -341,7 +341,7 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
 
     private void classifyImage(Bitmap image) {
         try {
-            ModelV11 model = ModelV11.newInstance(getApplicationContext());
+            Model model = Model.newInstance(getApplicationContext());
 
             // Creates inputs for reference.
 
@@ -368,7 +368,7 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
             inputFeature0.loadBuffer(byteBuffer);
 
             // Runs model inference and gets result.
-            ModelV11.Outputs outputs = model.process(inputFeature0);
+            Model.Outputs outputs = model.process(inputFeature0);
             TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
 
             float[] confidence = outputFeature0.getFloatArray();

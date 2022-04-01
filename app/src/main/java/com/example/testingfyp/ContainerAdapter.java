@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +45,14 @@ public class ContainerAdapter extends FirebaseRecyclerAdapter<Container, Contain
     protected void onBindViewHolder(@NonNull myViewHolder holder, int position, @NonNull Container model) {
         String containerName = model.getContainerName();
         holder.tvContainerName.setText(containerName);
+
+        if (containerType.equals("freezers")){
+            holder.ivContainer.setImageResource(R.drawable.icon_fridge_freezer);
+        }else if (containerType.equals("drawers")){
+            holder.ivContainer.setImageResource(R.drawable.icon_fridge_drawer);
+        }else if (containerType.equals("shelves")){
+            holder.ivContainer.setImageResource(R.drawable.icon_fridge_shelf);
+        }
 
         // if user press enter then forward to specific container for item viewing
         holder.cvContainer.setOnClickListener(new View.OnClickListener() {
@@ -126,10 +135,12 @@ public class ContainerAdapter extends FirebaseRecyclerAdapter<Container, Contain
     public class myViewHolder extends RecyclerView.ViewHolder {
         TextView tvContainerName;
         CardView cvContainer;
+        ImageView ivContainer;
         public myViewHolder(@NonNull View itemView) {
             super(itemView);
             tvContainerName = (TextView) itemView.findViewById(R.id.tvContainerName);
             cvContainer = (CardView) itemView.findViewById(R.id.cvContainer);
+            ivContainer = (ImageView) itemView.findViewById(R.id.ivContainer);
 
         }
     }

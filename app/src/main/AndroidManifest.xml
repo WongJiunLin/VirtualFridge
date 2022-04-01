@@ -7,11 +7,14 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_vridggy"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_vridggy_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TestingFYP">
+        <activity
+            android:name=".FridgeLayout"
+            android:exported="false" />
         <activity
             android:name=".ItemActivity"
             android:exported="false" />
@@ -20,9 +23,6 @@
             android:exported="false" />
         <activity
             android:name=".DrawerNavActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MessageTesting"
             android:exported="false" />
         <activity android:name=".AddParticipantsActivity" />
         <activity android:name=".FriendRequestActivity" />
