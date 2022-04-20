@@ -72,22 +72,6 @@ public class FridgeActivity extends AppCompatActivity {
         tvFridgeNameBanner = findViewById(R.id.tvFridgeNameBanner);
         tvFridgeNameBanner.setText(fridgeName);
 
-        // show all the merely expired items info if existed
-        FirebaseDatabase.getInstance().getReference().child("users").child(createdBy)
-                .child("fridges").child(fridgeKey).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.hasChild("merelyExpiredItems")){
-                    showMerelyExpiredItemsPopOut(fridgeKey, createdBy);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull  DatabaseError error) {
-
-            }
-        });
-
         imgBtnBack = findViewById(R.id.imgBtnBack);
 
         // while click on the tvFridgeNameBanner and close current activity
@@ -103,7 +87,7 @@ public class FridgeActivity extends AppCompatActivity {
         imgBtnAddParticipants.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkIsHost(fridgeKey);
+                checkIsHost();
             }
         });
 
@@ -225,59 +209,15 @@ public class FridgeActivity extends AppCompatActivity {
         });
     }
 
-    private void showMerelyExpiredItemsPopOut(String fridgeKey, String createdBy) {
-        Dialog merelyExpiredItemsDialog = new Dialog(this);
-        merelyExpiredItemsDialog.setContentView(R.layout.merelyexpiredpopout);
-
-        imgBtnClosePopout = merelyExpiredItemsDialog.findViewById(R.id.imgBtnClosePopout);
-        rvMerelyExpiredItems = merelyExpiredItemsDialog.findViewById(R.id.rvMerelyExpiredItems);
-
-        rvMerelyExpiredItems.setLayoutManager(new LinearLayoutManager(this));
-
-        FirebaseRecyclerOptions<Item> options = new FirebaseRecyclerOptions.Builder<Item>()
-                .setQuery(FirebaseDatabase.getInstance().getReference().child("users").child(createdBy)
-                        .child("fridges").child(fridgeKey).child("merelyExpiredItems"), Item.class).build();
-        merelyExpiredItemsAdapter = new MerelyExpiredItemsAdapter(options);
-        merelyExpiredItemsAdapter.startListening();
-        rvMerelyExpiredItems.setAdapter(merelyExpiredItemsAdapter);
-
-        imgBtnClosePopout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                merelyExpiredItemsDialog.dismiss();
-            }
-        });
-
-        merelyExpiredItemsDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        merelyExpiredItemsDialog.show();
-
+    private void checkIsHost() {
+        if (createdBy.equals(currentUserId)){
+            sendToAddParticipantsActivity();
+        }else{
+            Toast.makeText(this, "Only fridge host can invite other users.", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    private void checkIsHost(String fridgeKey) {
-        FirebaseDatabase.getInstance().getReference().child("users").child(currentUserId).child("fridges")
-                .child(fridgeKey).child("participants").child(currentUserId)
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()){
-                            String role = snapshot.child("role").getValue().toString();
-                            if (role.equals("host")){
-                                sendToAddParticipantsActivity(fridgeKey);
-                            }
-                            else{
-                                Toast.makeText(FridgeActivity.this, "Only fridge host can invite other users.", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-    }
-
-    private void sendToAddParticipantsActivity(String fridgeKey) {
+    private void sendToAddParticipantsActivity() {
         Intent intent = new Intent(FridgeActivity.this, AddParticipantsActivity.class);
         intent.putExtra("fridgeKey", fridgeKey);
         startActivity(intent);

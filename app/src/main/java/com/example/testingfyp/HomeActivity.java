@@ -111,7 +111,7 @@ public class HomeActivity extends AppCompatActivity {
         manager.createNotificationChannel(channel);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(HomeActivity.this, "Expired Item Notification");
-        builder.setContentTitle("Vridgy");
+        builder.setContentTitle("Vridge");
         builder.setContentText("Expired Item Notification");
         builder.setSmallIcon(R.drawable.apple);
         NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle();

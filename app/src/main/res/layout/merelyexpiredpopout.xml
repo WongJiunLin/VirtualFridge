@@ -5,14 +5,16 @@
     android:layout_height="475dp"
     android:background="@color/dark_gray"
     android:padding="5dp"
-    android:layout_gravity="center">
+    android:layout_gravity="center"
+    android:id="@+id/llExpiredItemsDialog">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/tvPopUpBanner"
+            android:layout_width="220dp"
             android:layout_height="wrap_content"
             android:text="Merely Expired Items"
             android:textSize="23sp"
@@ -24,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/clear_button"
-            android:layout_gravity="end"/>
+            android:layout_gravity="right"/>
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

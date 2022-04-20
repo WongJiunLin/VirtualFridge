@@ -6,22 +6,26 @@
         <entry key="..\:/Users/wongj/StudioProjects/VirtualFridge/app/src/main/res/drawable/add_button.xml" value="0.176" />
         <entry key="..\:/Users/wongj/StudioProjects/VirtualFridge/app/src/main/res/drawable/app_bg.xml" value="0.1515" />
         <entry key="..\:/Users/wongj/StudioProjects/VirtualFridge/app/src/main/res/drawable/available_bg.xml" value="0.1515" />
+        <entry key="..\:/Users/wongj/StudioProjects/VirtualFridge/app/src/main/res/drawable/check_button.xml" value="0.172" />
         <entry key="..\:/Users/wongj/StudioProjects/VirtualFridge/app/src/main/res/drawable/clear_button.xml" value="0.176" />
         <entry key="..\:/Users/wongj/StudioProjects/VirtualFridge/app/src/main/res/drawable/drawer_bg.xml" value="0.135" />
         <entry key="..\:/Users/wongj/StudioProjects/VirtualFridge/app/src/main/res/drawable/freezer_bg.xml" value="0.1515" />
         <entry key="..\:/Users/wongj/StudioProjects/VirtualFridge/app/src/main/res/drawable/icon_edit.xml" value="0.176" />
         <entry key="..\:/Users/wongj/StudioProjects/VirtualFridge/app/src/main/res/drawable/icon_error.xml" value="0.135" />
+        <entry key="..\:/Users/wongj/StudioProjects/VirtualFridge/app/src/main/res/drawable/input_effect.xml" value="0.172" />
         <entry key="..\:/Users/wongj/StudioProjects/VirtualFridge/app/src/main/res/drawable/iteminfopopup.xml" value="0.135" />
         <entry key="..\:/Users/wongj/StudioProjects/VirtualFridge/app/src/main/res/drawable/navbar_bg.xml" value="0.135" />
         <entry key="..\:/Users/wongj/StudioProjects/VirtualFridge/app/src/main/res/drawable/navbar_friendlist_bg.xml" value="0.135" />
         <entry key="..\:/Users/wongj/StudioProjects/VirtualFridge/app/src/main/res/drawable/shelf_bg.xml" value="0.135" />
         <entry key="..\:/Users/wongj/StudioProjects/VirtualFridge/app/src/main/res/drawable/tick_bg.xml" value="0.176" />
+        <entry key="..\:/Users/wongj/StudioProjects/VirtualFridge/app/src/main/res/layout/activity_add_freezer_item.xml" value="0.22282608695652173" />
         <entry key="..\:/Users/wongj/StudioProjects/VirtualFridge/app/src/main/res/layout/activity_add_fridge.xml" value="0.24547101449275363" />
         <entry key="..\:/Users/wongj/StudioProjects/VirtualFridge/app/src/main/res/layout/activity_add_item.xml" value="0.24547101449275363" />
         <entry key="..\:/Users/wongj/StudioProjects/VirtualFridge/app/src/main/res/layout/activity_add_participants.xml" value="0.24547101449275363" />
         <entry key="..\:/Users/wongj/StudioProjects/VirtualFridge/app/src/main/res/layout/activity_classify_item.xml" value="0.24547101449275363" />
         <entry key="..\:/Users/wongj/StudioProjects/VirtualFridge/app/src/main/res/layout/activity_drawer.xml" value="0.24547101449275363" />
         <entry key="..\:/Users/wongj/StudioProjects/VirtualFridge/app/src/main/res/layout/activity_drawer_nav.xml" value="0.24547101449275363" />
+        <entry key="..\:/Users/wongj/StudioProjects/VirtualFridge/app/src/main/res/layout/activity_edit_freezer_item.xml" value="0.22282608695652173" />
         <entry key="..\:/Users/wongj/StudioProjects/VirtualFridge/app/src/main/res/layout/activity_edit_item.xml" value="0.24547101449275363" />
         <entry key="..\:/Users/wongj/StudioProjects/VirtualFridge/app/src/main/res/layout/activity_expired_items.xml" value="0.24547101449275363" />
         <entry key="..\:/Users/wongj/StudioProjects/VirtualFridge/app/src/main/res/layout/activity_freezer.xml" value="0.24547101449275363" />
@@ -46,6 +50,7 @@
         <entry key="..\:/Users/wongj/StudioProjects/VirtualFridge/app/src/main/res/layout/createcontainerpopup.xml" value="0.24547101449275363" />
         <entry key="..\:/Users/wongj/StudioProjects/VirtualFridge/app/src/main/res/layout/dropdown_item.xml" value="0.24547101449275363" />
         <entry key="..\:/Users/wongj/StudioProjects/VirtualFridge/app/src/main/res/layout/expirationdatepopup.xml" value="0.24547101449275363" />
+        <entry key="..\:/Users/wongj/StudioProjects/VirtualFridge/app/src/main/res/layout/expirediteminfopopup.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/wongj/StudioProjects/VirtualFridge/app/src/main/res/layout/fridge_cardview.xml" value="0.24547101449275363" />
         <entry key="..\:/Users/wongj/StudioProjects/VirtualFridge/app/src/main/res/layout/friend_cardview.xml" value="0.24547101449275363" />
         <entry key="..\:/Users/wongj/StudioProjects/VirtualFridge/app/src/main/res/layout/friendrequest_cardview.xml" value="0.24547101449275363" />

@@ -76,7 +76,7 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
 
     private TextInputLayout txtIptLayoutItemType, txtIptLayoutItemCategory,txtIptLayoutItemExpirationDate, txtIptLayoutItemPosition;
     private AutoCompleteTextView dropdownItemType, dropdownItemCategory,tvItemExpirationDate, dropdownItemPosition;
-    private TextInputEditText edtItemName;
+    private TextInputEditText edtItemName, edtItemQuantity;
     private ImageButton addItemButton, clearItemButton, imgBtnClosePopOut, imgBtnClassifyItem, imgBtnClassifiedItemClosePopOut, imgBtnCloseNotRecommendedPopup;
     private ImageView ivItemImage;
     private ProgressBar pbAddItem;
@@ -91,6 +91,7 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
     private Intent intentFromOthers;
     private Date storedDate, expirationDate;
     private String itemName, itemType, itemCategory, itemStoredDate, itemExpirationDate, itemExpiryDate, itemPosition;
+    private int itemQuantity;
     private String fridgeKey, containerType, containerKey, itemTypeHint, itemCategoryHint, itemShelfLifeHint, createdBy;
     private ArrayAdapter<String> itemTypeAdapter;
 
@@ -271,6 +272,7 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
         dropdownItemPosition.setAdapter(itemPositionAdapter);
 
         edtItemName = (TextInputEditText) findViewById(R.id.edtItemName);
+        edtItemQuantity = (TextInputEditText) findViewById(R.id.edtItemQuantity);
 
         // click on the tick icon for item adding
         addItemButton = (ImageButton) findViewById(R.id.addItemButton);
@@ -555,8 +557,9 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
         itemName = edtItemName.getText().toString();
         itemType = dropdownItemType.getText().toString();
         itemCategory = dropdownItemCategory.getText().toString();
-        itemExpirationDate = tvItemExpirationDate.getText().toString();
         itemPosition = dropdownItemPosition.getText().toString();
+        itemExpirationDate = tvItemExpirationDate.getText().toString();
+        String strItemQuantity = edtItemQuantity.getText().toString();
 
         if (TextUtils.isEmpty(itemName)){
             edtItemName.setError("Required field");
@@ -570,7 +573,15 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
             dropdownItemCategory.setError("Please choose item category");
             return;
         }
-        if (TextUtils.isEmpty(itemExpirationDate)){
+        if (TextUtils.isEmpty(strItemQuantity)){
+            edtItemQuantity.setError("Required field");
+            return;
+        }else{
+            itemQuantity = Integer.parseInt(strItemQuantity);
+        }
+
+        // for drawer and shelf need to input expiration date
+        if (!containerType.equals("freezers")&&TextUtils.isEmpty(itemExpirationDate)){
             tvItemExpirationDate.setError("Please pick item expiration date");
             return;
         }
@@ -679,8 +690,13 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
         SimpleDateFormat currentDate = new SimpleDateFormat("dd-MM-yyyy");
         storedDate = calForStoredDate.getTime();
         itemStoredDate = currentDate.format(storedDate);
+        int days = 0;
 
-        int days = daysBetween(storedDate, expirationDate);
+        if (expirationDate==null){
+            days = 0;
+        }else{
+            days = daysBetween(storedDate, expirationDate);
+        }
 
         //create map to stored the current item info
         HashMap itemMap = new HashMap();
@@ -690,6 +706,7 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
         itemMap.put("itemStoredDate",itemStoredDate);
         itemMap.put("itemExpirationDate", itemExpirationDate);
         itemMap.put("itemPosition", itemPosition);
+        itemMap.put("itemQuantity",itemQuantity);
         itemMap.put("placedBy", currentUsername);
         itemMap.put("itemImgUri",downloadUri);
         itemMap.put("days",days);

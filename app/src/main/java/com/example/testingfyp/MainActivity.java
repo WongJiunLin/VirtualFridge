@@ -47,13 +47,15 @@ import org.w3c.dom.Text;
 
 import java.util.HashMap;
 
+import at.markushi.ui.CircleButton;
+
 public class MainActivity extends AppCompatActivity {
 
     private TextView tvRegisterAccount, tvAlertLoginError, tvForgetPassword;
     private TextInputEditText edt_signInAccount, edt_signInPassword;
     private Button signInButton;
     private ProgressBar pbLogin;
-    private ImageButton imgBtnGoogleSignIn;
+    private CircleButton imgBtnGoogleSignIn;
 
     private FirebaseAuth mAuth;
     private String currentUID, tokenID, email, googleId;
@@ -107,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
 
         // if user click google icon, then proceed google login
         requestGoogleSignIn();
-        imgBtnGoogleSignIn = (ImageButton) findViewById(R.id.imgBtnGoogleSignIn);
+        imgBtnGoogleSignIn = (CircleButton) findViewById(R.id.imgBtnGoogleSignIn);
         imgBtnGoogleSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

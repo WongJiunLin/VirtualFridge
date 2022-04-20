@@ -52,7 +52,7 @@ public class EditItemActivity extends AppCompatActivity implements DatePickerDia
 
     private ImageView ivEditItemImage;
     private TextInputLayout txtIptLayoutItemType, txtIptLayoutItemCategory,txtIptLayoutItemExpirationDate, txtIptLayoutItemPosition;
-    private TextInputEditText edtItemName;
+    private TextInputEditText edtItemName, edtItemQuantity;
     private AutoCompleteTextView dropdownItemType, dropdownItemCategory, dropdownItemPosition, tvItemExpirationDate;
     private TextView tvEditItemBanner, tvCheckExpiry, tvItemCategoryHint, tvItemShelfLifeHint, tvAddItemBanner;
     private CircleImageView civPopOutImg;
@@ -67,12 +67,14 @@ public class EditItemActivity extends AppCompatActivity implements DatePickerDia
 
     private Calendar calForStoredDate, calForExpiryDate;
     private Date storedDate, expirationDate, edtExpirationDate;
-    private String itemName, itemType, itemCategory, itemStoredDate, itemExpirationDate, itemPosition, itemImageUri;
+    private String itemName, itemType, itemCategory, itemStoredDate, itemExpirationDate, itemPosition, itemImageUri, itemQuantity;
 
     private Dialog expiryDialog;
     private String itemTypeHint, itemCategoryHint, itemShelfLifeHint;
 
-    private String edtItemType, edtItemCategory, edtItemExpirationDate, edtItemPosition;
+    private String edtItemType, edtItemCategory, edtItemExpirationDate, edtItemPosition, editItemQuantity;
+
+    private String fridgeKey, createdBy, containerKey, containerType, curItemId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +88,7 @@ public class EditItemActivity extends AppCompatActivity implements DatePickerDia
         ivEditItemImage = (ImageView) findViewById(R.id.ivEditItemImage);
         edtItemName = (TextInputEditText) findViewById(R.id.edtItemName);
         edtItemName.setInputType(InputType.TYPE_NULL);
+        edtItemQuantity = (TextInputEditText) findViewById(R.id.edtItemQuantity);
         dropdownItemType = (AutoCompleteTextView) findViewById(R.id.dropdownItemType);
         dropdownItemCategory = (AutoCompleteTextView) findViewById(R.id.dropdownItemCategory);
         tvItemExpirationDate = (AutoCompleteTextView) findViewById(R.id.tvItemExpirationDate);
@@ -94,11 +97,11 @@ public class EditItemActivity extends AppCompatActivity implements DatePickerDia
         pbEditItem = (ProgressBar) findViewById(R.id.pbEditItem);
 
         intentFromItemAdapter = getIntent();
-        String fridgeKey = intentFromItemAdapter.getStringExtra("fridgeKey");
-        String containerType = intentFromItemAdapter.getStringExtra("containerType");
-        String containerKey = intentFromItemAdapter.getStringExtra("containerKey");
-        String createdBy = intentFromItemAdapter.getStringExtra("createdBy");
-        String curItemId = intentFromItemAdapter.getStringExtra("curItemId");
+        fridgeKey = intentFromItemAdapter.getStringExtra("fridgeKey");
+        containerType = intentFromItemAdapter.getStringExtra("containerType");
+        containerKey = intentFromItemAdapter.getStringExtra("containerKey");
+        createdBy = intentFromItemAdapter.getStringExtra("createdBy");
+        curItemId = intentFromItemAdapter.getStringExtra("curItemId");
 
         itemRef = FirebaseDatabase.getInstance().getReference().child("users").child(createdBy)
                         .child("fridges").child(fridgeKey).child(containerType).child(containerKey).child("items").child(curItemId);
@@ -247,10 +250,12 @@ public class EditItemActivity extends AppCompatActivity implements DatePickerDia
                 itemExpirationDate = snapshot.child("itemExpirationDate").getValue().toString();
                 itemPosition = snapshot.child("itemPosition").getValue().toString();
                 itemImageUri = snapshot.child("itemImgUri").getValue().toString();
+                itemQuantity = snapshot.child("itemQuantity").getValue().toString();
 
                 // assign item info into respective fields
                 Picasso.get().load(Uri.parse(itemImageUri)).into(ivEditItemImage);
                 edtItemName.setText(itemName);
+                edtItemQuantity.setText(itemQuantity);
                 dropdownItemType.setText(itemType, false);
                 dropdownItemCategory.setText(itemCategory);
                 tvItemExpirationDate.setText(itemExpirationDate);
@@ -389,6 +394,7 @@ public class EditItemActivity extends AppCompatActivity implements DatePickerDia
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         storedDate = calForStoredDate.getTime();
         itemStoredDate = sdf.format(storedDate);
+        int days = 0;
 
         try {
             edtExpirationDate = sdf.parse(edtItemExpirationDate);
@@ -396,7 +402,12 @@ public class EditItemActivity extends AppCompatActivity implements DatePickerDia
             e.printStackTrace();
         }
 
-        int days = daysBetween(storedDate, edtExpirationDate);
+        if (!containerType.equals("freezers")){
+            days = daysBetween(storedDate, edtExpirationDate);
+        }else{
+            days = 0;
+        }
+
 
         //create map to stored the latest item info
         HashMap itemMap = new HashMap();
@@ -407,13 +418,14 @@ public class EditItemActivity extends AppCompatActivity implements DatePickerDia
         itemMap.put("itemExpirationDate", edtItemExpirationDate);
         itemMap.put("itemPosition", edtItemPosition);
         itemMap.put("itemImgUri",itemImageUri);
+        itemMap.put("itemQuantity", Integer.parseInt(editItemQuantity));
         itemMap.put("days",days);
 
         pbEditItem.setVisibility(View.VISIBLE);
         itemRef.updateChildren(itemMap).addOnSuccessListener(new OnSuccessListener() {
             @Override
             public void onSuccess(Object o) {
-                Toast.makeText(EditItemActivity.this, "New Item Added", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditItemActivity.this, itemName+ " info updated", Toast.LENGTH_SHORT).show();
                 finish();
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -430,6 +442,7 @@ public class EditItemActivity extends AppCompatActivity implements DatePickerDia
         edtItemCategory = dropdownItemCategory.getText().toString();
         edtItemExpirationDate = tvItemExpirationDate.getText().toString();
         edtItemPosition = dropdownItemPosition.getText().toString();
+        editItemQuantity = edtItemQuantity.getText().toString();
 
         if (TextUtils.isEmpty(edtItemType)){
             dropdownItemType.setError("Please choose item type");
@@ -439,12 +452,16 @@ public class EditItemActivity extends AppCompatActivity implements DatePickerDia
             dropdownItemCategory.setError("Please choose item category");
             return;
         }
-        if (TextUtils.isEmpty(edtItemExpirationDate)){
+        if (!containerType.equals("freezers")&&TextUtils.isEmpty(edtItemExpirationDate)){
             tvItemExpirationDate.setError("Please pick item expiration date");
             return;
         }
         if (TextUtils.isEmpty(edtItemPosition)){
             dropdownItemPosition.setError("Please pick item expiration date");
+            return;
+        }
+        if (TextUtils.isEmpty(editItemQuantity)){
+            edtItemQuantity.setError("Please fill in item amount");
             return;
         }
 

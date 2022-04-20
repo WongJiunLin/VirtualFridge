@@ -21,4 +21,5 @@
     <color name="safeExpired">#ABEBC6</color>
     <color name="requestFriend">#97CA5C</color>
     <color name="declineFriend">#E14242</color>
+    <color name="orange">#E19C36</color>
 </resources>

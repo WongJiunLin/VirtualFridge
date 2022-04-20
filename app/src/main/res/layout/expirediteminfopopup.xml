@@ -140,42 +140,30 @@
             android:textColor="@color/black"
             android:textSize="18sp"/>
 
-        <at.markushi.ui.CircleButton
-            android:id="@+id/btnEditItem"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_below="@+id/tvItemQuantity"
-            android:layout_marginLeft="40dp"
-            android:layout_marginTop="25dp"
-            android:src="@drawable/icon_edit_item"
-            app:cb_color="@color/requestFriend"
-            app:cb_pressedRingWidth="8dip" />
-
-        <at.markushi.ui.CircleButton
-            android:id="@+id/btnConsumeItem"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_below="@+id/tvItemQuantity"
+        <TextView
+            android:id="@+id/tvContainerNameBanner"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvItemQuantityBanner"
             android:layout_marginLeft="30dp"
-            android:layout_marginTop="25dp"
-            android:layout_toRightOf="@id/btnEditItem"
-            android:src="@drawable/icon_take"
-            app:cb_color="@color/orange"
-            app:cb_pressedRingWidth="8dip" />
+            android:layout_marginTop="10dp"
+            android:fontFamily="sans-serif-black"
+            android:text="Located at: "
+            android:textColor="@color/black"
+            android:textSize="18sp"/>
 
-        <at.markushi.ui.CircleButton
-            android:id="@+id/btnDeleteItem"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+        <TextView
+            android:id="@+id/tvContainerName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/tvItemQuantity"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="25dp"
-            android:layout_toRightOf="@+id/btnConsumeItem"
-            android:src="@drawable/icon_delete_item"
-            app:cb_color="@color/declineFriend"
-            app:cb_pressedRingWidth="8dip"/>
+            android:layout_toRightOf="@+id/tvContainerNameBanner"
+            android:layout_marginTop="10dp"
+            android:fontFamily="sans-serif-black"
+            android:text="10"
+            android:textColor="@color/black"
+            android:textSize="18sp"/>
     </RelativeLayout>
-
 
 
 </LinearLayout>

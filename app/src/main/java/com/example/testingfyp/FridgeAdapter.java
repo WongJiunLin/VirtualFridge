@@ -49,7 +49,7 @@ public class FridgeAdapter extends FirebaseRecyclerAdapter<Fridge, FridgeAdapter
             @Override
             public void onClick(View v) {
                 String fridgeKey = getRef(holder.getAdapterPosition()).getKey();
-                Intent intent = new Intent(v.getContext(),FridgeActivity.class);
+                Intent intent = new Intent(v.getContext(),FridgeLayout.class);
                 intent.putExtra("fridgeName",fridgeName);
                 intent.putExtra("fridgeKey",fridgeKey);
                 intent.putExtra("createdBy",createdBy);
@@ -78,8 +78,13 @@ public class FridgeAdapter extends FirebaseRecyclerAdapter<Fridge, FridgeAdapter
                                     if (snapshot.exists()){
                                         for (DataSnapshot ds : snapshot.getChildren()){
                                             String participantId = ds.getKey();
-                                            FirebaseDatabase.getInstance().getReference().child("users").child(participantId)
-                                                    .child("fridges").child(getRef(holder.getAdapterPosition()).getKey()).removeValue();
+                                            String role = ds.child("role").getValue().toString();
+                                            if (role.equals("participant")){
+                                                FirebaseDatabase.getInstance().getReference().child("users").child(participantId)
+                                                        .child("fridges").child(getRef(holder.getAdapterPosition()).getKey()).removeValue();
+                                            }else{
+                                                return;
+                                            }
                                         }
                                     }
                                 }
