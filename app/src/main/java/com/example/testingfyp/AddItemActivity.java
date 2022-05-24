@@ -707,12 +707,12 @@ public class AddItemActivity extends AppCompatActivity implements DatePickerDial
         itemMap.put("itemExpirationDate", itemExpirationDate);
         itemMap.put("itemPosition", itemPosition);
         itemMap.put("itemQuantity",itemQuantity);
-        itemMap.put("placedBy", currentUsername);
+        itemMap.put("placedBy", currentUserId);
         itemMap.put("itemImgUri",downloadUri);
         itemMap.put("days",days);
 
         //store the hashmap into the firebase real-time database
-        itemRef.child(itemName+itemStoredDate+saveCurrentTime).updateChildren(itemMap).addOnSuccessListener(new OnSuccessListener() {
+        itemRef.child(itemName+currentUserId+itemStoredDate+saveCurrentTime).updateChildren(itemMap).addOnSuccessListener(new OnSuccessListener() {
             @Override
             public void onSuccess(Object o) {
                 Toast.makeText(AddItemActivity.this, "New Item Added", Toast.LENGTH_SHORT).show();

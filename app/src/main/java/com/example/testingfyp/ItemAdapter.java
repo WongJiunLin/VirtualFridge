@@ -60,7 +60,7 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private String currentUserId = mAuth.getUid();
 
-    private String currentItemId, containerName;
+    private String currentItemId, currentUsername, containerName, placedByUsername;
     private int colorAlert, colorModerate, colorSafe;
 
     private Dialog itemDialog;
@@ -83,7 +83,19 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
 
         // current Item
         currentItemId = getRef(holder.getAdapterPosition()).getKey();
+        FirebaseDatabase.getInstance().getReference().child("users").child(currentUserId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.hasChild("username")){
+                    currentUsername = snapshot.child("username").getValue().toString();
+                }
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         // obtain color code
         colorAlert = holder.cvItem.getResources().getColor(R.color.nearlyExpired);
         colorModerate = holder.cvItem.getResources().getColor(R.color.moderateExpired);
@@ -234,9 +246,23 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
         tvItemQuantity = (TextView) itemDialog.findViewById(R.id.tvItemQuantity);
         llItemInfo = (LinearLayout) itemDialog.findViewById(R.id.llItemInfo);
         civItemImg = (CircleImageView) itemDialog.findViewById(R.id.civItemImg);
-
         tvItemName.setText(model.getItemName());
-        tvPlacedBy.setText(model.getPlacedBy());
+        String placedByUserID = model.getPlacedBy();
+        FirebaseDatabase.getInstance().getReference().child("users").child(placedByUserID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.hasChild("username")){
+                    placedByUsername = snapshot.child("username").getValue().toString();
+                    tvPlacedBy.setText(placedByUsername);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         tvItemPosition.setText(model.getItemPosition());
         tvItemQuantity.setText(String.valueOf(model.getItemQuantity()));
         Picasso.get().load(model.getItemImgUri()).into(civItemImg);
@@ -308,6 +334,25 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemAdapter.myVie
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isComplete()){
                                         Toast.makeText(view.getContext(), "One "+model.getItemName()+" has been taken out.", Toast.LENGTH_SHORT).show();
+                                        // check if the consumer is host or not
+                                        // if not then inform the host about item consumption
+                                        String placedBy = model.getPlacedBy();
+                                        if (!currentUserId.equals(placedBy)){
+                                            FirebaseDatabase.getInstance().getReference().child("users").child(placedBy).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    if (snapshot.hasChild("tokenID")){
+                                                        String hostTokenID = snapshot.child("tokenID").getValue().toString();
+                                                        FCMSend.pushNotification(view.getContext(), hostTokenID, "Item Consumption", currentUsername+" has consumed one of your "+model.getItemName());
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                }
+                                            });
+                                        }
                                     }
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
